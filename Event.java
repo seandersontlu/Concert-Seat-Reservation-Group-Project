@@ -75,7 +75,16 @@ public class Event implements Comparable<Event>
 
     public int compareTo(Event other)
     {
-        int result =
+        int result = eventTitle.compareTo(other.eventTitle);
+
+        // In the chance that an artist has multiple events
+        // on different dates, this will help compare and order
+        // by date instead.
+        if (result == 0)
+            result = date.compareTo(other.date);
+
+        return result;
+    }
 
 
 }

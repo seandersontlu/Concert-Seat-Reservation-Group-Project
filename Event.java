@@ -1,3 +1,6 @@
+// Montrell Wiley, David Glenewinkel, Sarah Anderson
+// CSCI 434, Project #2
+// 4/1/19
 
 
 public class Event implements Comparable<Event>

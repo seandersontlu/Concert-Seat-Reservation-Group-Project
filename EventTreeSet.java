@@ -1,9 +1,6 @@
-// Montrell Wiley
-// CSCI 337 Homework #9, Problem #10
-// PersonTreeSet.java
-// 10/24/18
-//
-// This program creates a tree set of person objects
+// Montrell Wiley, David Glenewinkel, Sarah Anderson
+// CSCI 434, Project #2
+// 4/1/19
 
 import java.util.*;
 import java.io.*;

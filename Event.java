@@ -89,6 +89,13 @@ public class Event implements Comparable<Event>
         return result;
     }
 
+    public String toString()
+    {
+        return (eventTitle + " - " + date +
+            " - " + startTime + "-" + endTime);
+    }       
+
+
 
 }
 

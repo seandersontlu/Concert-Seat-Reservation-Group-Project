@@ -1,4 +1,7 @@
-
+// David, Sarah Anderson, and Montrell 
+// CSCI 434  Project #2 Iteration #1
+// Submitted: 4/5/2019
+// SerialRead.java
 
 import java.util.*;
 import java.io.*;

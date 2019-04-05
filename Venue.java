@@ -1,4 +1,8 @@
+// David, Sarah Anderson, and Montrell 
+// CSCI 434  Project #2 Iteration #1
+// Submitted: 4/5/2019
 // Venue.java
+
 
 /*
  * This class represents the Venue where the event will be held

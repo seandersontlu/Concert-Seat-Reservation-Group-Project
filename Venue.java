@@ -1,26 +1,41 @@
 // Venue.java
 
+/*
+ * This class represents the Venue where the event will be held
+ * @author  Sarah Anderson, Montrel Wiley, David Glenewinkel
+ */
+
 public class Venue
 {
     private static final int SEAT_OPEN = 0;
     private static final int SEAT_TAKEN = 1;
 
+    private String message;
     private String venueName;
     private String address;
-    private int row;
-    private int col;
+    private int numRows;
+    private int numCols;
     private int numSeats;
     private int[][] seats;
-
-    public Venue(String venueName, String address, int numSeats, int[][] seats)
+    
+    /** Creates the Venue object
+     * @param venueName   the name of the venue
+     * @param address     the venue's address
+     * @param seats       the seats in the venue
+     */
+    public Venue(String venueName, String address, int[][] seats)
     {
         this.venueName = venueName;
         this.address = address;
-        this.numSeats = numSeats;
         this.seats = seats;
+        numRows = seats.length;
+        numCols = seats[0].length;
+        numSeats = numRows * numCols;
+        initializeSeats();
     }
 
     /** Gets name of the venue
+     * @return  the name of the venue
      */
     public String getVenueName()
     {
@@ -28,27 +43,31 @@ public class Venue
     }
     
     /** Gets address of the venue
+     * @return  the venue's address
      */
     public String getAddress()
     {
         return address;
     }
 
-    /** Gets the seat row
+    /** Gets the number of row
+     * @return  the number of row of seats
      */
-    public int getRow()
+    public int getNumRows()
     {
-        return row;
+        return numRows;
     }
 
     /** Gets the seat column 
+     * @return  the number of columnss of seats
      */
-    public int getCol()
+    public int getNumCols()
     {
-        return col;
+        return numCols;
     }
 
     /** Gets the number seats
+     * @return  the number of seats in the venue
      */
     public int getNumSeats()
     {
@@ -56,6 +75,7 @@ public class Venue
     }
     
     /** Gets the 2d array representing the seats
+     * @return  the 2d array of seats
      */
     public int[][] getSeats()
     {
@@ -88,39 +108,52 @@ public class Venue
     public void setSeats(int row, int col)
     {
         seats = new int[row][col];
+        initializeSeats();
     }
-    
+     
+    /** Sets the seat to SEAT_TAKEN (1)
+     */
+    public void reserveSeat(int row, int col) 
+    {
+        if (seats[row][col] == SEAT_OPEN)
+            seats[row][col] = SEAT_TAKEN;
+        else
+            message = "This seat is taken.";
+    }
+
     /**
      * Counts the number of open seats
-     * @return number of open seats
+     * @return  the number of open seats
      */
     public int numOpenSeats()
     {
         int num = 0;
-        for (int i = 0; i < row; i++)
-            for (int j = 0; j < col; j++)
-                if (seats[row][col] == SEAT_OPEN)
+        for (int i = 0; i < numRows; i++)
+            for (int j = 0; j < numCols; j++)
+                if (seats[numRows][numCols] == SEAT_OPEN)
                     num++;
         return num;
     }
 
     /**
      * Counts the number of taken seats
-     * @return number of taken seats
+     * @return  the number of taken seats
      */
     public int numTakenSeats()
     {
         int num = 0;
-        for (int i = 0; i < row; i++)
-            for (int j = 0; j < col; j++)
-                if (seats[row][col] == SEAT_TAKEN)
+        for (int i = 0; i < numRows; i++)
+            for (int j = 0; j < numCols; j++)
+                if (seats[numRows][numCols] == SEAT_TAKEN)
                     num++;
         return num;
     }
 
     /**
      * Checks if a seat is taken
-     * @return determines if seat is taken
+     * @param row   The row of the desired seat
+     * @param col   The column of the desired seat
+     * @return  determines if seat is taken
      */
     public boolean isSeatTaken(int row, int col)
     {
@@ -134,7 +167,9 @@ public class Venue
     
     /**
      * Checks if a seat is open
-     * @return determines if seat is open
+     * @param row   The row of the desired seat
+     * @param col   The column of the desired seat
+     * @return  determines if seat is open
      */
     public boolean isSeatOpen(int row, int col)
     {
@@ -143,6 +178,42 @@ public class Venue
             result = true;
         else
             result = false;
+        return result;
+    }
+   
+    /** Resets the seats to SEAT_OPEN
+     */
+    public void resetSeats()
+    {
+        initializeSeats();
+    }
+
+    /** Sets all the seats to SEAT_OPEN
+     */
+    private void initializeSeats()
+    {
+        for (int i = 0; i < numRows; i++)
+            for (int j = 0; j < numCols; j++)
+                seats[i][j] = SEAT_OPEN;
+    }
+
+    /** Returns a string representation
+     * @return  the string representation of the seats
+     */
+    public String toString()
+    {
+        String result = "";
+        for (int i = 0; i < numCols; i++)
+            result += "\t[" + (i + 1) + "]";
+        result += "\n";
+
+        for (int j = 0; j < numRows; j++)
+        {
+            result += "[" + (j+1) + "]";
+            for (int k = 0; k < numCols; k++)
+                result += "\t " + seats[j][k];
+            result += "\n";
+        }
         return result;
     }
 }

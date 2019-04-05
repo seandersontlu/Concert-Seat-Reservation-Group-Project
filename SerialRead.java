@@ -1,24 +1,20 @@
 
 
-
+import java.util.*;
 import java.io.*;
 
 public class SerialRead
 {
     public static void main(String[] args)
     {
-        Event event;
 
         System.out.println("Reading event objects from Event.ser...\n");
 
         try (ObjectInputStream inFile
             = new ObjectInputStream(new FileInputStream("Event.ser")))
         {
-            while(true)
-            {
-                event = (Event) inFile.readObject();
-                System.out.println("Event:  " + event);
-            }
+            TreeSet events = (TreeSet) inFile.readObject();
+            System.out.println("Events:  " + events);
         }
         catch (FileNotFoundException e)
         {

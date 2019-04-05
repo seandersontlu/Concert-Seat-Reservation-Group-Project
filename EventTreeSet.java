@@ -12,6 +12,8 @@ public class EventTreeSet
         final String FILE_NAME = "events.csv";
         TreeSet<Event> eventSet = new TreeSet<Event>();
 
+        /** Create the set of events read from the csv file
+         */
         try (Scanner fileScan = new Scanner(new File(FILE_NAME)))
         {
             while (fileScan.hasNext())
@@ -30,6 +32,25 @@ public class EventTreeSet
         catch (FileNotFoundException e)
         {
             System.err.println("Cannot open file.");
+        }
+
+        /** Create serialized objects from the treeset
+         *  and write to Event.ser
+         */
+        try (ObjectOutputStream outFile
+            = new ObjectOutputStream(new FileOutputStream("Event.ser")))
+        {
+            outFile.writeObject(eventSet);
+
+            System.out.println("\nWrote event list to Event.ser\n");
+        }
+        catch (FileNotFoundException e)
+        {
+            System.err.println("Cannot open file \"Event.ser\" for writing.");
+        }
+        catch (IOException e)
+        {
+            System.err.println("Error in writing to file \"Event.ser\".");
         }
 
         Iterator<Event> iter = eventSet.iterator();

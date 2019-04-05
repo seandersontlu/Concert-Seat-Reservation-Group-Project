@@ -2,8 +2,9 @@
 // CSCI 434, Project #2
 // 4/1/19
 
+import java.io.Serializable;
 
-public class Event implements Comparable<Event>
+public class Event implements Comparable<Event>, Serializable
 {
     private String eventTitle;
     private String date;

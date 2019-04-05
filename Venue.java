@@ -108,6 +108,8 @@ public class Venue
     public void setSeats(int row, int col)
     {
         seats = new int[row][col];
+        numRows = row;
+        numCols = col;
         initializeSeats();
     }
      

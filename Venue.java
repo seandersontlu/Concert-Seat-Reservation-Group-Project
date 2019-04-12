@@ -9,6 +9,9 @@
  * @author  Sarah Anderson, Montrel Wiley, David Glenewinkel
  */
 
+import java.util.*;
+import java.io.*;
+
 public class Venue
 {
     private static final int SEAT_OPEN = 0;
@@ -21,6 +24,8 @@ public class Venue
     private int numCols;
     private int numSeats;
     private int[][] seats;
+    private TreeSet eventSet;
+    private String fileName;
     
     /** Creates the Venue object
      * @param venueName   the name of the venue
@@ -32,10 +37,12 @@ public class Venue
         this.venueName = venueName;
         this.address = address;
         this.seats = seats;
+        fileName = venueName + "Events.ser";
         numRows = seats.length;
         numCols = seats[0].length;
         numSeats = numRows * numCols;
         initializeSeats();
+        createTreeSet();
     }
 
     /** Gets name of the venue
@@ -192,6 +199,38 @@ public class Venue
     public void resetSeats()
     {
         initializeSeats();
+    }
+
+    /** Returns the TreeSet of events
+     * @return TreeSet of events
+     public TreeSet getEventSet()
+     {
+         return eventSet;
+     }
+
+    /** Creates the TreeSet of Events
+     *  associated with this Venue
+     */
+    private void createTreeSet()
+    {
+        try (ObjectInputStream inFile
+            = new ObjectInputStream(new FileInputStream(fileName)))
+        {
+            eventSet = (TreeSet) inFile.readObject();
+        }
+        catch (FileNotFoundException e)
+        {
+            System.err.println("Could not open file " + fileName +
+                "for reading");
+        }
+        catch (EOFException e)
+        {
+            System.out.println("\nReached the end of events stored.");
+        }
+        catch (Exception e)
+        {
+            System.err.println(e);
+        }
     }
 
     /** Sets all the seats to SEAT_OPEN

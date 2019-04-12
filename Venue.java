@@ -12,7 +12,7 @@
 import java.util.*;
 import java.io.*;
 
-public class Venue
+public class Venue implements Serializable
 {
     private static final int SEAT_OPEN = 0;
     private static final int SEAT_TAKEN = 1;

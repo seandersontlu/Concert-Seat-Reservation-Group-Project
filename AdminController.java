@@ -56,10 +56,11 @@ public class AdminController
 
                 System.out.println("\nCreating new venue...");
                 System.out.print("Enter the address for the venue: ");
-                String address = scan.nextLine();
+                String address = scan.nextLine().trim();
                 System.out.print("Enter the amount of seats: ");
                 int numOfSeats = scan.nextInt();
                 int[][] seats = new int[numOfSeats / 2][numOfSeats / 2];
+
 
                 try (ObjectOutputStream outFile
                     = new ObjectOutputStream(new FileOutputStream(eventFileName)))
@@ -68,6 +69,9 @@ public class AdminController
                     {
                         System.out.println("\nCreating new event...");
                         System.out.print("Enter the event title: ");
+                        // Scanner was reading a random space so
+                        // reinitializing the scanner fixes the issue
+                        scan = new Scanner(System.in);
                         String eventTitle = scan.nextLine();
                         System.out.print("Enter the date of the event: ");
                         String date = scan.nextLine();
@@ -81,8 +85,8 @@ public class AdminController
 
                         System.out.print("\nCreate another event for" + 
                             " this venue? Y/N: ");
-                        char choice = scan.nextChar().toLowerCase();
-                        if (choice.equals("n"));
+                        String choice = scan.next().toLowerCase();
+                        if (choice.equals("n"))
                             finished = true;
 
                     }while(!finished);

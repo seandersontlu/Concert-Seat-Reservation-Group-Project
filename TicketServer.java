@@ -20,6 +20,7 @@ public class TicketServer implements TicketConstants
 
             System.out.printf("Server listening on port %d ...\n", PORT);
 
+            
             // Always listen for and process connections
             while (true)  
             {
@@ -33,13 +34,43 @@ public class TicketServer implements TicketConstants
                 PrintWriter outToClient = new PrintWriter(
                     connectionSocket.getOutputStream());
 
+                String listOfVenues = "";
+
+                try (ObjectInputStream inFile
+                    = new ObjectInputStream(new FileInputStream("Venue.ser")))
+                {
+                    while (true)
+                    {
+                        Venue venue = (Venue) inFile.readObject();
+                        listOfVenues = ("Venue: " + venue);
+                    }
+                }
+                catch (FileNotFoundException e)
+                {
+                    System.err.println("Could not open file \"Venue.ser\"" +
+                        "for reading");
+                }
+                catch (EOFException e)
+                {
+                    System.out.println("\nReached the end of Venues stores.");
+                }
+                catch (Exception e)
+                {
+                    System.err.println(e);
+
+                }
+
+
+                outToClient.print(listOfVenues);
+                outToClient.flush();
+
                 String clientRequest = inFromClient.nextLine();
                 String result = "Transfer Succeeded";
 
-                System.out.println(result); // status information
+                System.out.println(result);
 
                 outToClient.println(result);
-                outToClient.flush();  // NEEDED to complete transmission
+                outToClient.flush();
                 connectionSocket.close();
             }
         }

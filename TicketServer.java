@@ -10,6 +10,7 @@ public class TicketServer implements TicketConstants
 {
     private static Random generator = new Random();
 
+
     public static void main(String[] args) 
     {
         System.out.println("*** Ticket Server ***\n");
@@ -34,16 +35,22 @@ public class TicketServer implements TicketConstants
                 PrintWriter outToClient = new PrintWriter(
                     connectionSocket.getOutputStream());
 
-                String listOfVenues = "";
+
+
+                Venue venue;
+                String listOfVenues = "Venue:";
 
                 try (ObjectInputStream inFile
                     = new ObjectInputStream(new FileInputStream("Venue.ser")))
                 {
+
                     while (true)
                     {
-                        Venue venue = (Venue) inFile.readObject();
-                        listOfVenues = ("Venue: " + venue);
+                        venue = (Venue) inFile.readObject();
+                        listOfVenues += venue;
                     }
+
+
                 }
                 catch (FileNotFoundException e)
                 {
@@ -59,19 +66,15 @@ public class TicketServer implements TicketConstants
                     System.err.println(e);
 
                 }
+            outToClient.print(listOfVenues);
+            outToClient.flush();
+            String result = "Transfer Succeeded";
+            System.out.println(result);
+            outToClient.println(result);
+            outToClient.flush();
+            connectionSocket.close();
 
 
-                outToClient.print(listOfVenues);
-                outToClient.flush();
-
-                String clientRequest = inFromClient.nextLine();
-                String result = "Transfer Succeeded";
-
-                System.out.println(result);
-
-                outToClient.println(result);
-                outToClient.flush();
-                connectionSocket.close();
             }
         }
         catch (IOException e)

@@ -247,18 +247,6 @@ public class Venue implements Serializable
      */
     public String toString()
     {
-        String result = "";
-        for (int i = 0; i < numCols; i++)
-            result += "\t[" + (i + 1) + "]";
-        result += "\n";
-
-        for (int j = 0; j < numRows; j++)
-        {
-            result += "[" + (j+1) + "]";
-            for (int k = 0; k < numCols; k++)
-                result += "\t " + seats[j][k];
-            result += "\n";
-        }
-        return result;
+        return venueName + " - " + address;
     }
 }

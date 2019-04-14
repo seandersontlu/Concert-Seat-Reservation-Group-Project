@@ -81,7 +81,7 @@ public class AdminController
 
                         System.out.print("\nCreate another event for" + 
                             " this venue? Y/N: ");
-                        String choice = scan.next().toLowerCase();
+                        char choice = scan.nextChar().toLowerCase();
                         if (choice.equals("n"));
                             finished = true;
 
@@ -117,6 +117,29 @@ public class AdminController
                     System.err.println("Error in writing to file " + venueFileName);
                 }
 
+            }
+            else
+            {
+                try (ObjectInputStream inFile
+                    = new ObjectInputStream(new FileInputStream(eventFileName)))
+                {
+                    TreeSet<Event> eventSet 
+                        = (TreeSet<Event>) inFile.readObject();
+
+                    System.out.println("Here are the events for" +
+                        " the selected venue:\n");
+
+                    Iterator<Event> iter = eventSet.iterator();
+                    while (iter.hasNext())
+                        System.out.println(iter.next());
+
+                }
+                catch (FileNotFoundException e)
+                {
+                    System.err.println("Could not open file" + eventFileName +
+                        "for reading");
+                }
+                
             }
         }
         catch (Exception e)

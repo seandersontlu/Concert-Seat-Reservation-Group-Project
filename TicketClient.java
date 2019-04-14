@@ -8,30 +8,10 @@ public class TicketClient implements TicketConstants
 {
     public static void main(String[] args) 
     {
+        
         System.out.println("*** Ticket Client ***\n");
         System.out.println("This program lists events and allows" 
-            + " you to reserve seats at the given event.");
-
-        Boolean Found = false;
-
-        String event = " ";
-        Scanner scan = new Scanner(System.in);
-
-        while (!Found)
-        {
-            System.out.print("Choose the event you want: ");
-            String input = scan.next();
-
-            //if event is found in the list of event names
-            //{
-                Found = true;
-            //}
-            //else 
-            //{
-                // System.out.println("Could not understand your choice, "
-                    //+ "please try again.");
-            //}
-        }
+            + " you to reserve seats at the given event.\n");
 
         try
         {
@@ -43,12 +23,16 @@ public class TicketClient implements TicketConstants
             Scanner inFromServer = new Scanner(
                 clientToServer.getInputStream());
 
-            // Send message to server and receive response
-            outToServer.println(event);
-            outToServer.flush();  // NEEDED to complete transmission
+            //Gets the list of venues from the server.
+            String listOfVenues = inFromServer.next();
+            System.out.print(listOfVenues); 
 
-            String result = inFromServer.nextLine();
-            System.out.println("\nFrom Server: " + result);
+            // Send message to server and receive response
+            //outToServer.println(event);
+            //outToServer.flush();
+
+            //String result = inFromServer.nextLine();
+            //System.out.println("\nFrom Server: " + result);
 
             clientToServer.close();
         }

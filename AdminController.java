@@ -7,6 +7,8 @@ import java.io.*;
 
 public class AdminController
 {
+    private static Scanner scan = new Scanner(System.in);
+
     public static void main(String[] args)
     {
         final String venueFileName = "Venue.ser";
@@ -37,8 +39,6 @@ public class AdminController
             System.err.println(e);
         }
 
-        Scanner scan = new Scanner(System.in);
-
         System.out.print("Please enter a Venue name: ");
         String venueName = scan.nextLine();
 
@@ -60,51 +60,8 @@ public class AdminController
                 System.out.print("Enter the amount of seats: ");
                 int numOfSeats = scan.nextInt();
                 int[][] seats = new int[numOfSeats / 2][numOfSeats / 2];
+                createEvents(eventSet, eventFileName);
 
-
-                try (ObjectOutputStream outFile
-                    = new ObjectOutputStream(new FileOutputStream(eventFileName)))
-                {
-                    do
-                    {
-                        System.out.println("\nCreating new event...");
-                        System.out.print("Enter the event title: ");
-                        // Scanner was reading a random space so
-                        // reinitializing the scanner fixes the issue
-                        scan = new Scanner(System.in);
-                        String eventTitle = scan.nextLine();
-                        System.out.print("Enter the date of the event: ");
-                        String date = scan.nextLine();
-                        System.out.print("Enter the starting time: ");
-                        String startTime = scan.nextLine();
-                        System.out.print("Enter the ending time: ");
-                        String endTime = scan.nextLine();
-                        
-                        eventSet.add(new Event(
-                            eventTitle, date, startTime, endTime));
-
-                        System.out.print("\nCreate another event for" + 
-                            " this venue? Y/N: ");
-                        String choice = scan.next().toLowerCase();
-                        if (choice.equals("n"))
-                            finished = true;
-
-                    }while(!finished);
-                        
-                    outFile.writeObject(eventSet);
-
-                    System.out.println("\nWrote event list to " + eventFileName +
-                        "\n");
-                }
-                    
-                catch (FileNotFoundException e)
-                {
-                    System.err.println("Cannot open file " + eventFileName + "for writing.");
-                }
-                catch (IOException e)
-                {
-                    System.err.println("Error in writing to file " + eventFileName);
-                }
 
                 try (ObjectOutputStream outFile
                     = new ObjectOutputStream(new FileOutputStream(venueFileName)))
@@ -137,7 +94,9 @@ public class AdminController
                     while (iter.hasNext())
                         System.out.println(iter.next());
 
+                    createEvents(eventSet, eventFileName);
                 }
+
                 catch (FileNotFoundException e)
                 {
                     System.err.println("Could not open file" + eventFileName +
@@ -151,4 +110,56 @@ public class AdminController
             System.err.println(e);
         }
     }
+
+    private static void createEvents(TreeSet<Event> eventSet, String eventFileName)
+    {
+        try (ObjectOutputStream outFile
+            = new ObjectOutputStream(new FileOutputStream(eventFileName)))
+        {
+            boolean finished = false;
+            String choice = "";
+            do
+            {
+                System.out.print("\nCreate a new event for" + 
+                    " this venue? Y/N: ");
+                choice = scan.next().toLowerCase();
+                if (choice.equals("n"))
+                    finished = true;
+                else
+                {
+                    System.out.println("\nCreating new event...");
+                    System.out.print("Enter the event title: ");
+                    // Scanner was reading a random space so
+                    // reinitializing the scanner fixes the issue
+                    scan = new Scanner(System.in);
+                    String eventTitle = scan.nextLine();
+                    System.out.print("Enter the date of the event: ");
+                    String date = scan.nextLine();
+                    System.out.print("Enter the starting time: ");
+                    String startTime = scan.nextLine();
+                    System.out.print("Enter the ending time: ");
+                    String endTime = scan.nextLine();
+                        
+                    eventSet.add(new Event(
+                        eventTitle, date, startTime, endTime));
+                }
+
+            }while(!finished);
+                        
+            outFile.writeObject(eventSet);
+
+            System.out.println("\nWrote event list to " + eventFileName +
+                "\n");
+        }
+                    
+        catch (FileNotFoundException e)
+        {
+            System.err.println("Cannot open file " + eventFileName + "for writing.");
+        }
+        catch (IOException e)
+        {
+            System.err.println("Error in writing to file " + eventFileName);
+        }
+    }
+
 }

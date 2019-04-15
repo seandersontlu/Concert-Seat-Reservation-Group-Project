@@ -68,6 +68,8 @@ public class TicketServer implements TicketConstants
                 }
             outToClient.print(listOfVenues);
             outToClient.flush();
+
+            //Testing connection
             String result = "Transfer Succeeded";
             System.out.println(result);
             outToClient.println(result);

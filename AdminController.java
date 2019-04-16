@@ -48,7 +48,6 @@ public class AdminController
             File eventFile = new File(eventFileName);
             if (!eventFile.exists())
             {
-                // TODO
                 // This will create a new venue as well as
                 // the event file that pairs with it.
                 TreeSet<Event> eventSet = new TreeSet<Event>();

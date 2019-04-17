@@ -25,15 +25,42 @@ public class TicketClient implements TicketConstants
 
             //Gets the list of venues from the server.
             String listOfVenues = inFromServer.nextLine();
-            System.out.println(listOfVenues);
+            System.out.println(listOfVenues); 
             System.out.println();
 
-            // Send message to server and receive response
-            //outToServer.println(event);
-            //outToServer.flush();
+            //TODO Sends a venue to server
+            String chosenVenue = "";
+            outToServer.println(chosenVenue);
+            outToServer.flush();
 
-            //String result = inFromServer.nextLine();
-            //System.out.println("\nFrom Server: " + result);
+            //TODO Gets the list of events at the venue
+            String listOfEvents = inFromServer.nextLine();
+            System.out.println(listOfEvents);
+            System.out.println();
+
+            //TODO Sends the event to the server
+            String chosenEvent = "";
+            outToServer.println(chosenEvent);
+            outToServer.flush();
+
+            //TODO Recieves sections from server
+            String listOfSections = inFromServer.nextLine();
+            System.out.println(listOfSections);
+            System.out.println();
+
+            //TODO Sends section and number to server
+            String chosenSection = "";
+            outToServer.println(chosenSection);
+            outToServer.flush();
+            int num = 0;
+            outToServer.println(num);
+            outToServer.flush();
+
+            //TODO Recieves confirmation OR error
+            String result = inFromServer.nextLine();
+            System.out.println(result);
+            System.out.println();
+
 
             clientToServer.close();
         }

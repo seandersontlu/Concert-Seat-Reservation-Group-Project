@@ -66,11 +66,55 @@ public class TicketServer implements TicketConstants
                     System.err.println(e);
 
                 }
+            
+            //Sends list of venues out to client
+            
             outToClient.print(listOfVenues);
             outToClient.flush();
 
-            //Testing connection
-            String result = "Transfer Succeeded";
+            //TODO Recieves a venue from the client
+            
+            String chosenVenue = inFromClient.nextLine();
+
+
+            //TODO Sends the list of events at the venue
+
+            String listOfEvents = "Events: ";
+            outToClient.print(listOfEvents);
+            outToClient.flush();
+
+            //TODO Recieves the event from the client
+            
+            String chosenEvent = inFromClient.nextLine();
+
+            //TODO Sends the sections to the client
+
+            String listOfSections = "Sections: ";
+            outToClient.print(listOfSections);
+            outToClient.flush();
+
+            //TODO Recieves a section and number from the client
+
+            String section = inFromClient.nextLine();
+            int num = inFromClient.nextInt();
+
+            //TODO Makes reservation and confirms reservation OR sends error message if the reservation is
+            //impossible 
+            
+            Boolean reservationMade = true;
+
+            String result;
+            
+            if (reservationMade)
+            {
+                result = "Your reservation has been made";
+            }
+            else
+            {
+                result = "Not enough remaining seats in section." 
+                    + " Please try again.";
+            }
+            
             System.out.println(result);
             outToClient.println(result);
             outToClient.flush();

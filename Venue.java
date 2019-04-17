@@ -209,24 +209,41 @@ public class Venue implements Serializable
      */
     private void arrangeSeats()
     {
-        int rowCounter = 0;
-
         for (int i = 0; i < seats.length; i++)
         {
             seats[i] = new LinkedList();
-            
-            for (int j = 0; j < rowsPerSect; j++)
-            {
+            for (int j = 0; j < totalRows; j++)
                 for (int k = 0; k < totalCols; k++)
-                    seats[i].add(SEAT_OPEN);
-                    //seats[i].add("R" + (rowCounter+1) + "-" + (k+1));
-                rowCounter++;
-            }
+                    seats[i].add((i+1) + "-R" + (j+1) + "-" + (k+1));
         }
     }
 
-    /** Returns a string representation
+    /**  Returns a string representation of the seats
      * @return  the string representation of the seats
+     */
+    public String displaySeats()
+    {
+        String result = "";
+        for (int i = 0; i < seats.length; i++)
+        {
+            result += "\nSection" + (i+1) + ": \n";
+            int colCounter = 0;
+            for (int j = 0; j < seats[i].size(); j++)
+            {
+                result += "[" + seats[i].get(j) + "]";
+                colCounter++;
+                if (colCounter == totalCols)
+                {
+                    colCounter = 0;
+                    result += "\n";
+                }
+            }
+        }
+        return result;
+    }
+
+    /** Returns a string representation
+     * @return  the string representation of the venue info
      */
     public String toString()
     {

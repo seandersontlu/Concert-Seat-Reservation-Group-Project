@@ -3,8 +3,7 @@
 import java.io.*;
 import java.net.Socket;
 import java.net.ServerSocket;
-import java.util.Scanner;
-import java.util.Random;
+import java.util.*;
 
 public class TicketServer implements TicketConstants
 {
@@ -72,17 +71,46 @@ public class TicketServer implements TicketConstants
             outToClient.println(listOfVenues);
             outToClient.flush();
 
-            //TODO Recieves a venue from the client
+            //Recieves a venue from the client
             
             String chosenVenue = inFromClient.nextLine();
-            System.out.println("Venue recieved from client")
+            System.out.println("Venue recieved from client");
 
 
-            //TODO Sends the list of events at the venue
+            //Sends the list of events at the venue
 
+            String eventFileName = chosenVenue + "Events.ser";
+
+            
+            
             String listOfEvents = "Events: ";
-            outToClient.print(listOfEvents);
+
+            try (ObjectInputStream inFile
+                = new ObjectInputStream(new FileInputStream(eventFileName)))
+            {
+                TreeSet<Event> eventSet 
+                    = (TreeSet<Event>) inFile.readObject();
+
+                Iterator<Event> iter = eventSet.iterator();
+                while (iter.hasNext())
+                {
+                    listOfEvents += iter.next();
+                }
+
+            }
+            catch (FileNotFoundException e)
+            {
+                System.err.println("Could not open file" + eventFileName 
+                + "for reading, please check the spelling and try again.");
+            }
+            catch (Exception e)
+            {
+                System.err.println("Error");
+            }
+
+            outToClient.println(listOfEvents);
             outToClient.flush();
+            System.out.println("Sent list of events.");
 
             //TODO Recieves the event from the client
             
@@ -90,6 +118,7 @@ public class TicketServer implements TicketConstants
 
             //TODO Sends the sections to the client
 
+            
             String listOfSections = "Sections: ";
             outToClient.print(listOfSections);
             outToClient.flush();

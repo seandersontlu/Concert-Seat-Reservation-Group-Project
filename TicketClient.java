@@ -30,19 +30,20 @@ public class TicketClient implements TicketConstants
             System.out.println(listOfVenues); 
             System.out.println();
 
-            //TODO Sends a venue to server
+            //Sends a venue to server
             System.out.print("Choose venue: ");
-            String chosenVenue = scan.next();
+            String chosenVenue = scan.nextLine();
             outToServer.println(chosenVenue);
             outToServer.flush();
 
-            //TODO Gets the list of events at the venue
+            //Gets the list of events at the venue
             String listOfEvents = inFromServer.nextLine();
             System.out.println(listOfEvents);
             System.out.println();
 
-            //TODO Sends the event to the server
-            String chosenEvent = "";
+            //TODo Sends the event to the server
+            System.out.print("Choose event: ");
+            String chosenEvent = scan.nextLine();
             outToServer.println(chosenEvent);
             outToServer.flush();
 
@@ -50,7 +51,6 @@ public class TicketClient implements TicketConstants
             String listOfSections = inFromServer.nextLine();
             System.out.println(listOfSections);
             System.out.println();
-
             //TODO Sends section and number to server
             String chosenSection = "";
             outToServer.println(chosenSection);

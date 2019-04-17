@@ -69,12 +69,13 @@ public class TicketServer implements TicketConstants
             
             //Sends list of venues out to client
             
-            outToClient.print(listOfVenues);
+            outToClient.println(listOfVenues);
             outToClient.flush();
 
             //TODO Recieves a venue from the client
             
             String chosenVenue = inFromClient.nextLine();
+            System.out.println("Venue recieved from client")
 
 
             //TODO Sends the list of events at the venue

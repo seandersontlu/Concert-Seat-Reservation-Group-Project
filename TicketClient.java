@@ -12,6 +12,8 @@ public class TicketClient implements TicketConstants
         System.out.println("*** Ticket Client ***\n");
         System.out.println("This program lists events and allows" 
             + " you to reserve seats at the given event.\n");
+        
+        Scanner scan = new Scanner(System.in);
 
         try
         {
@@ -29,7 +31,8 @@ public class TicketClient implements TicketConstants
             System.out.println();
 
             //TODO Sends a venue to server
-            String chosenVenue = "";
+            System.out.print("Choose venue: ");
+            String chosenVenue = scan.next();
             outToServer.println(chosenVenue);
             outToServer.flush();
 

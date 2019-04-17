@@ -3,7 +3,6 @@
 // Submitted: 4/5/2019
 // Venue.java
 
-
 /*
  * This class represents the Venue where the event will be held
  * @author  Sarah Anderson, Montrel Wiley, David Glenewinkel
@@ -20,28 +19,41 @@ public class Venue implements Serializable
     private String message;
     private String venueName;
     private String address;
-    private int numRows;
-    private int numCols;
-    private int numSeats;
-    private int[][] seats;
+    
+    private int numSections;
+    private int rowsPerSect;
+    private int totalRows;
+    private int totalCols;
+    private int seatsPerSect;
+    private int totalSeats;
+
+    private LinkedList[] seats;
     private TreeSet eventSet;
     private String fileName;
     
     /** Creates the Venue object
      * @param venueName   the name of the venue
      * @param address     the venue's address
-     * @param seats       the seats in the venue
+     * @param numSections the number of sections of seats
+     * @param rowsPerSect the number of rows in each section
+     * @param totalCols   the total number of columns
      */
-    public Venue(String venueName, String address, int[][] seats)
+    public Venue(String venueName, String address, int numSections, 
+        int rowsPerSect, int totalCols)
     {
         this.venueName = venueName;
         this.address = address;
-        this.seats = seats;
         fileName = venueName + "Events.ser";
-        numRows = seats.length;
-        numCols = seats[0].length;
-        numSeats = numRows * numCols;
-        initializeSeats();
+
+        this.numSections = numSections;
+        this.rowsPerSect = rowsPerSect;
+        this.totalCols = totalCols;
+        int seatsPerSect = rowsPerSect * totalCols;
+        totalSeats = seatsPerSect * numSections;
+        totalRows = numSections * rowsPerSect;
+
+        seats = new LinkedList[numSections];
+        arrangeSeats();
         createTreeSet();
     }
 
@@ -60,35 +72,59 @@ public class Venue implements Serializable
     {
         return address;
     }
-
-    /** Gets the number of row
-     * @return  the number of row of seats
+    
+    /** Gets the number of sections of seats
+     * @ return  the number of seactions of seats
      */
-    public int getNumRows()
+     public int getNumSections()
+     {
+         return numSections;
+     }
+
+    /** Gets the number of rows per section
+     * @return  the number of rows per Section
+     */
+    public int getRowsPerSection()
     {
-        return numRows;
+        return rowsPerSect;
+    }
+    
+    /** Gets the number of seats per section
+     * @return  the number of seats per Section
+     */
+    public int getSeatsPerSection()
+    {
+        return seatsPerSect;
     }
 
-    /** Gets the seat column 
-     * @return  the number of columnss of seats
+    /** Gets the total number of rows
+     * @return  the number of row of seats
      */
-    public int getNumCols()
+    public int getTotalRows()
     {
-        return numCols;
+        return totalRows;
+    }
+
+    /** Gets the total number of columns
+     * @return  the number of columns of seats
+     */
+    public int getTotalCols()
+    {
+        return totalCols;
     }
 
     /** Gets the number seats
-     * @return  the number of seats in the venue
+     * @return  the total number of seats in the venue
      */
     public int getNumSeats()
     {
-        return numSeats;
+        return totalSeats;
     }
-    
-    /** Gets the 2d array representing the seats
-     * @return  the 2d array of seats
+
+    /** Gets the array representing the seats
+     * @return  the array of seats
      */
-    public int[][] getSeats()
+    public LinkedList[] getSeats()
     {
         return seats;
     }
@@ -107,98 +143,33 @@ public class Venue implements Serializable
         address = venueAddress;
     }
 
-    /** Sets the number of the seats
+    /** Sets the number of the sections
      */
-    public void setNumSeats(int num)
+    public void setNumSections(int num)
     {
-        numSeats = num;
+        numSections = num;
     }
 
-    /** Sets the 2d array representing the seats
+    /** Sets the number of rows per section
      */
-    public void setSeats(int row, int col)
+    public void setRowsPerSections(int num)
     {
-        seats = new int[row][col];
-        numRows = row;
-        numCols = col;
-        initializeSeats();
-    }
-     
-    /** Sets the seat to SEAT_TAKEN (1)
-     */
-    public void reserveSeat(int row, int col) 
-    {
-        if (seats[row][col] == SEAT_OPEN)
-            seats[row][col] = SEAT_TAKEN;
-        else
-            message = "This seat is taken.";
-    }
-
-    /**
-     * Counts the number of open seats
-     * @return  the number of open seats
-     */
-    public int numOpenSeats()
-    {
-        int num = 0;
-        for (int i = 0; i < numRows; i++)
-            for (int j = 0; j < numCols; j++)
-                if (seats[numRows][numCols] == SEAT_OPEN)
-                    num++;
-        return num;
-    }
-
-    /**
-     * Counts the number of taken seats
-     * @return  the number of taken seats
-     */
-    public int numTakenSeats()
-    {
-        int num = 0;
-        for (int i = 0; i < numRows; i++)
-            for (int j = 0; j < numCols; j++)
-                if (seats[numRows][numCols] == SEAT_TAKEN)
-                    num++;
-        return num;
-    }
-
-    /**
-     * Checks if a seat is taken
-     * @param row   The row of the desired seat
-     * @param col   The column of the desired seat
-     * @return  determines if seat is taken
-     */
-    public boolean isSeatTaken(int row, int col)
-    {
-        boolean result = false;
-        if (seats[row][col] == SEAT_TAKEN)
-            result = true;
-        else
-            result = false;
-        return result;
+        rowsPerSect = num;
     }
     
-    /**
-     * Checks if a seat is open
-     * @param row   The row of the desired seat
-     * @param col   The column of the desired seat
-     * @return  determines if seat is open
+    /** Sets the number of columns
      */
-    public boolean isSeatOpen(int row, int col)
+    public void setTotalCols(int num)
     {
-        boolean result = false;
-        if (seats[row][col] == SEAT_OPEN)
-            result = true;
-        else
-            result = false;
-        return result;
+        totalCols = num;
     }
-   
+
+    
     /** Resets the seats to SEAT_OPEN
      */
     public void resetSeats()
     {
-        initializeSeats();
+        arrangeSeats();
     }
 
     /** Returns the TreeSet of events
@@ -233,13 +204,25 @@ public class Venue implements Serializable
         }
     }
 
-    /** Sets all the seats to SEAT_OPEN
+    /** Creates the array of Linked Lists representing the seats 
+     *  in the venue
      */
-    private void initializeSeats()
+    private void arrangeSeats()
     {
-        for (int i = 0; i < numRows; i++)
-            for (int j = 0; j < numCols; j++)
-                seats[i][j] = SEAT_OPEN;
+        int rowCounter = 0;
+
+        for (int i = 0; i < seats.length; i++)
+        {
+            seats[i] = new LinkedList();
+            
+            for (int j = 0; j < rowsPerSect; j++)
+            {
+                for (int k = 0; k < totalCols; k++)
+                    seats[i].add(SEAT_OPEN);
+                    //seats[i].add("R" + (rowCounter+1) + "-" + (k+1));
+                rowCounter++;
+            }
+        }
     }
 
     /** Returns a string representation
@@ -247,6 +230,6 @@ public class Venue implements Serializable
      */
     public String toString()
     {
-        return venueName + " - " + address;
+        return venueName + "\n" + address + "\n";
     }
 }

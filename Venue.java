@@ -13,8 +13,8 @@ import java.io.*;
 
 public class Venue implements Serializable
 {
-    private static final int SEAT_OPEN = 0;
-    private static final int SEAT_TAKEN = 1;
+    //private static final int SEAT_OPEN = 0;
+    private static final String SEAT_TAKEN = "X";
 
     private String message;
     private String venueName;
@@ -48,7 +48,7 @@ public class Venue implements Serializable
         this.numSections = numSections;
         this.rowsPerSect = rowsPerSect;
         this.totalCols = totalCols;
-        int seatsPerSect = rowsPerSect * totalCols;
+        seatsPerSect = rowsPerSect * totalCols;
         totalSeats = seatsPerSect * numSections;
         totalRows = numSections * rowsPerSect;
 
@@ -74,7 +74,7 @@ public class Venue implements Serializable
     }
     
     /** Gets the number of sections of seats
-     * @ return  the number of seactions of seats
+     * @ return  the number of sections of seats
      */
      public int getNumSections()
      {
@@ -164,7 +164,34 @@ public class Venue implements Serializable
         totalCols = num;
     }
 
+    /**
+     * Counts the number of open seats
+     * @return  the number of open seats
+    */
+    public int numOpenSeats()
+    {
+        int num = 0;
+        for (int i = 0; i < seats.length; i++)
+            for (int j = 0; j < seats[i].size() / numSections; j++)
+                if (!seats[i].contains(SEAT_TAKEN))
+                    num++;
+        return num;
+    }
     
+    /**
+     * Counts the number of taken seats
+     * @return  the number of taken seats
+    */
+    public int numTakenSeats()
+    {
+        int num = 0;
+        for (int i = 0; i < seats.length; i++)
+            for (int j = 0; j < seats[i].size() / numSections ; j++)
+                if (seats[i].contains(SEAT_TAKEN))
+                    num++;
+        return num;
+    }
+
     /** Resets the seats to SEAT_OPEN
      */
     public void resetSeats()
@@ -209,12 +236,16 @@ public class Venue implements Serializable
      */
     private void arrangeSeats()
     {
+        int rowCounter = 1;
         for (int i = 0; i < seats.length; i++)
         {
             seats[i] = new LinkedList();
             for (int j = 0; j < totalRows; j++)
+            {
                 for (int k = 0; k < totalCols; k++)
-                    seats[i].add((i+1) + "-R" + (j+1) + "-" + (k+1));
+                    seats[i].add((i+1) + "-R" + rowCounter + "-" + (k+1));
+                rowCounter++;
+            }
         }
     }
 
@@ -224,11 +255,12 @@ public class Venue implements Serializable
     public String displaySeats()
     {
         String result = "";
+        
         for (int i = 0; i < seats.length; i++)
         {
             result += "\nSection" + (i+1) + ": \n";
             int colCounter = 0;
-            for (int j = 0; j < seats[i].size(); j++)
+            for (int j = 0; j < seats[i].size() / numSections ; j++)
             {
                 result += "[" + seats[i].get(j) + "]";
                 colCounter++;

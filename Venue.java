@@ -13,7 +13,7 @@ import java.io.*;
 
 public class Venue implements Serializable
 {
-    //private static final int SEAT_OPEN = 0;
+    //private static final String SEAT_OPEN = "O";
     private static final String SEAT_TAKEN = "X";
 
     private String message;
@@ -52,7 +52,7 @@ public class Venue implements Serializable
         totalSeats = seatsPerSect * numSections;
         totalRows = numSections * rowsPerSect;
 
-        seats = new LinkedList[numSections];
+        seats = new LinkedList[totalSeats];
         arrangeSeats();
         createTreeSet();
     }
@@ -74,7 +74,7 @@ public class Venue implements Serializable
     }
     
     /** Gets the number of sections of seats
-     * @ return  the number of sections of seats
+     * @return  the number of sections of seats
      */
      public int getNumSections()
      {
@@ -164,8 +164,7 @@ public class Venue implements Serializable
         totalCols = num;
     }
 
-    /**
-     * Counts the number of open seats
+    /**Counts the number of open seats
      * @return  the number of open seats
     */
     public int numOpenSeats()
@@ -178,8 +177,7 @@ public class Venue implements Serializable
         return num;
     }
     
-    /**
-     * Counts the number of taken seats
+    /**Counts the number of taken seats
      * @return  the number of taken seats
     */
     public int numTakenSeats()
@@ -192,22 +190,70 @@ public class Venue implements Serializable
         return num;
     }
 
-    /** Resets the seats to SEAT_OPEN
+    /**Counts the number of rows needed to seat more than what one row can hold
+     * @ param numSeats the number of seats to reserve
+     * @ throws IllegalArgumentException the parameter must be larger than the
+     *                                   total number of columns
+     * @ return The number of rows needed to seat more than what a single row
+     *          can hold
+     */
+    public int generateNumRowsNeeded (int numSeats)
+    {
+        if (numSeats <= totalCols)
+            throw new IllegalArgumentException("Error: " +
+                "Value entered must be greater than " +
+                totalCols);
+
+        double numRowsNeeded = 1.0;
+        
+        if (numSeats > totalCols)
+        {
+            numRowsNeeded = (double) numSeats / totalCols;
+            numRowsNeeded = Math.ceil(numRowsNeeded);
+        }
+
+        int rowsNeeded = (int) numRowsNeeded;
+        return rowsNeeded;
+    }
+    
+    /**Counts the number of open seats in a given row
+     * @ param rowNum   The row number you want to count the number of open
+     *                  seats
+     * @ throws IllegalArgumentException the parameter must be between 1 and
+     *                                   the total number of rows, inclusively
+     * @ return The number of open seats in a given row
+     */
+    public int countOpenSeatsInRow(int rowNum)
+    {
+        if (rowNum <= 0 || rowNum > totalRows)
+            throw new IllegalArgumentException("Error: " +
+                "Invalid input.\n The venue does not have " + 
+                rowNum + " rows.\n" + "It has " + totalRows + 
+                " rows.");
+        
+        int num = 0;
+        for (int i = 0; i < seats[rowNum].size() - 1; i++)
+            if (seats[rowNum].get(i) != SEAT_TAKEN)
+                num++;
+        return num;
+    }
+
+    /**Resets the seats to SEAT_OPEN
      */
     public void resetSeats()
     {
         arrangeSeats();
     }
 
-    /** Returns the TreeSet of events
+    /**Returns the TreeSet of events
      * @return TreeSet of events
+     */
      public TreeSet getEventSet()
      {
          return eventSet;
      }
 
-    /** Creates the TreeSet of Events
-     *  associated with this Venue
+    /** Creates the TreeSet of Events associated with this Venue
      */
     private void createTreeSet()
     {
@@ -230,51 +276,76 @@ public class Venue implements Serializable
             System.err.println(e);
         }
     }
-
-    /** Creates the array of Linked Lists representing the seats 
-     *  in the venue
+    
+    /** Assigns values to the array of LinkedLists, seats[] 
      */
-    private void arrangeSeats()
+    public void arrangeSeats()
     {
         int rowCounter = 1;
         for (int i = 0; i < seats.length; i++)
         {
             seats[i] = new LinkedList();
-            for (int j = 0; j < totalRows; j++)
+            for (int j = 0; j < totalCols; j++)
+                seats[i].add("R" + rowCounter + "-" + (j+1));
+            rowCounter++;
+        }
+    }
+    
+    /**Reserves seat[s] if the number of seats desired to be reserve can fit in one row,
+     * @param numSeats The number of seats to reserve
+     * @param row The row you wish to be seated
+     */
+    public void reserveSeatsInOneRow (int numSeats, int row) 
+    {
+        for (int i = 0; i < numSeats; i++)
+            if (seats[row].get(i) != SEAT_TAKEN)
+                seats[row].set(i, SEAT_TAKEN);
+    }
+
+    /**Reserves seat[s] if the number of seats desired to be reserved fits in
+     * multiple rows
+     * @param numSeats The number of seats to reserve
+     * @param row The starting row you wish to be seated
+     * @param numRows The number of rows needed to allocate numSeats into
+     */
+    public void reserveSeatsInMultRows (int numSeats, int row,
+        int numRows) 
+    {
+        int ct = 0;
+        for (int i = row; i < row + numRows; i++)
+        {
+            for (int j = 0; j < totalCols && ct != numSeats; j++)
             {
-                for (int k = 0; k < totalCols; k++)
-                    seats[i].add((i+1) + "-R" + rowCounter + "-" + (k+1));
-                rowCounter++;
+                if (seats[i].get(j) != SEAT_TAKEN)
+                    seats[i].set(j, SEAT_TAKEN);
+                ct++;
             }
         }
     }
-
-    /**  Returns a string representation of the seats
-     * @return  the string representation of the seats
-     */
+    
+   /**Prints string representation of the venue seats
+    * @return The string representation of the venue seats
+    */
     public String displaySeats()
     {
+        int sectCount = 1;
         String result = "";
+        result += "\nSection 1: \n";
         
-        for (int i = 0; i < seats.length; i++)
+        for (int i = 0; i < seats.length / totalCols; i++)
         {
-            result += "\nSection" + (i+1) + ": \n";
-            int colCounter = 0;
-            for (int j = 0; j < seats[i].size() / numSections ; j++)
+            if (i == rowsPerSect * (sectCount))
             {
-                result += "[" + seats[i].get(j) + "]";
-                colCounter++;
-                if (colCounter == totalCols)
-                {
-                    colCounter = 0;
-                    result += "\n";
-                }
+                result += "\nSection " + (sectCount+1) + ": \n";
+                sectCount++;
             }
+            result += seats[i] + "\n";
         }
+
         return result;
     }
 
-    /** Returns a string representation
+    /**Returns a string representation
      * @return  the string representation of the venue info
      */
     public String toString()

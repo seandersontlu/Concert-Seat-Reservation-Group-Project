@@ -11,7 +11,7 @@
 import java.util.*;
 import java.io.*;
 
-public class Venue implements Serializable
+public class Venue implements Comparable<Venue>, Serializable
 {
     //private static final String SEAT_OPEN = "O";
     private static final String SEAT_TAKEN = "X";
@@ -345,11 +345,21 @@ public class Venue implements Serializable
         return result;
     }
 
+    /**Compares two venue objects
+     * @return The int result of comparing venue names
+     */
+     public int compareTo(Venue other)
+     {
+         int result = venueName.compareTo(other.venueName);
+
+         return result;
+     }
+
     /**Returns a string representation
      * @return  the string representation of the venue info
      */
     public String toString()
     {
-        return venueName + "\n" + address + "\n";
+        return venueName + " - " + address;
     }
 }

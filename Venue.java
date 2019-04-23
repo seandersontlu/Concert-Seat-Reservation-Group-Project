@@ -13,7 +13,7 @@ import java.io.*;
 
 public class Venue implements Comparable<Venue>, Serializable
 {
-    //private static final String SEAT_OPEN = "O";
+    private static final String SEAT_OPEN = "O";
     private static final String SEAT_TAKEN = "X";
 
     private String message;
@@ -26,6 +26,7 @@ public class Venue implements Comparable<Venue>, Serializable
     private int totalCols;
     private int seatsPerSect;
     private int totalSeats;
+    private int openSeats;
 
     private LinkedList[] seats;
     private TreeSet eventSet;
@@ -51,6 +52,7 @@ public class Venue implements Comparable<Venue>, Serializable
         seatsPerSect = rowsPerSect * totalCols;
         totalSeats = seatsPerSect * numSections;
         totalRows = numSections * rowsPerSect;
+        openSeats = totalSeats;
 
         seats = new LinkedList[totalSeats];
         arrangeSeats();
@@ -120,6 +122,22 @@ public class Venue implements Comparable<Venue>, Serializable
     {
         return totalSeats;
     }
+    
+    /** Gets the number of open seats
+     * @return  the number of open seats in the venue
+     */
+    public int getNumOpenSeats()
+    {
+        return openSeats;
+    }
+    
+    /**gets the number of taken seats
+     * @return  the number of taken seats
+    */
+    public int getNumTakenSeats()
+    {
+        return totalSeats - openSeats;
+    }
 
     /** Gets the array representing the seats
      * @return  the array of seats
@@ -162,80 +180,6 @@ public class Venue implements Comparable<Venue>, Serializable
     public void setTotalCols(int num)
     {
         totalCols = num;
-    }
-
-    /**Counts the number of open seats
-     * @return  the number of open seats
-    */
-    public int numOpenSeats()
-    {
-        int num = 0;
-        for (int i = 0; i < seats.length; i++)
-            for (int j = 0; j < seats[i].size() / numSections; j++)
-                if (!seats[i].contains(SEAT_TAKEN))
-                    num++;
-        return num;
-    }
-    
-    /**Counts the number of taken seats
-     * @return  the number of taken seats
-    */
-    public int numTakenSeats()
-    {
-        int num = 0;
-        for (int i = 0; i < seats.length; i++)
-            for (int j = 0; j < seats[i].size() / numSections ; j++)
-                if (seats[i].contains(SEAT_TAKEN))
-                    num++;
-        return num;
-    }
-
-    /**Counts the number of rows needed to seat more than what one row can hold
-     * @ param numSeats the number of seats to reserve
-     * @ throws IllegalArgumentException the parameter must be larger than the
-     *                                   total number of columns
-     * @ return The number of rows needed to seat more than what a single row
-     *          can hold
-     */
-    public int generateNumRowsNeeded (int numSeats)
-    {
-        if (numSeats <= totalCols)
-            throw new IllegalArgumentException("Error: " +
-                "Value entered must be greater than " +
-                totalCols);
-
-        double numRowsNeeded = 1.0;
-        
-        if (numSeats > totalCols)
-        {
-            numRowsNeeded = (double) numSeats / totalCols;
-            numRowsNeeded = Math.ceil(numRowsNeeded);
-        }
-
-        int rowsNeeded = (int) numRowsNeeded;
-        return rowsNeeded;
-    }
-    
-    /**Counts the number of open seats in a given row
-     * @ param rowNum   The row number you want to count the number of open
-     *                  seats
-     * @ throws IllegalArgumentException the parameter must be between 1 and
-     *                                   the total number of rows, inclusively
-     * @ return The number of open seats in a given row
-     */
-    public int countOpenSeatsInRow(int rowNum)
-    {
-        if (rowNum <= 0 || rowNum > totalRows)
-            throw new IllegalArgumentException("Error: " +
-                "Invalid input.\n The venue does not have " + 
-                rowNum + " rows.\n" + "It has " + totalRows + 
-                " rows.");
-        
-        int num = 0;
-        for (int i = 0; i < seats[rowNum].size() - 1; i++)
-            if (seats[rowNum].get(i) != SEAT_TAKEN)
-                num++;
-        return num;
     }
 
     /**Resets the seats to SEAT_OPEN
@@ -286,7 +230,7 @@ public class Venue implements Comparable<Venue>, Serializable
         {
             seats[i] = new LinkedList();
             for (int j = 0; j < totalCols; j++)
-                seats[i].add("R" + rowCounter + "-" + (j+1));
+                seats[i].add(SEAT_OPEN);
             rowCounter++;
         }
     }
@@ -297,22 +241,26 @@ public class Venue implements Comparable<Venue>, Serializable
      */
     public void reserveSeatsInOneRow (int numSeats, int row) 
     {
-        for (int i = 0; i < numSeats; i++)
-            if (seats[row].get(i) != SEAT_TAKEN)
-                seats[row].set(i, SEAT_TAKEN);
+        int ct = 0;
+        for (int i = 0; i < seats[row].size() && ct != numSeats; i++)
+            if (seats[row-1].get(i) != SEAT_TAKEN)
+            {
+                seats[row-1].set(i, SEAT_TAKEN);
+                ct++;
+            }
+        openSeats -= numSeats;
     }
 
     /**Reserves seat[s] if the number of seats desired to be reserved fits in
      * multiple rows
      * @param numSeats The number of seats to reserve
      * @param row The starting row you wish to be seated
-     * @param numRows The number of rows needed to allocate numSeats into
      */
-    public void reserveSeatsInMultRows (int numSeats, int row,
-        int numRows) 
+    public void reserveSeatsInMultRows (int numSeats, int row) 
     {
+        int numRows = generateNumRows (numSeats);
         int ct = 0;
-        for (int i = row; i < row + numRows; i++)
+        for (int i = row - 1; i < (row-1) + numRows; i++)
         {
             for (int j = 0; j < totalCols && ct != numSeats; j++)
             {
@@ -321,8 +269,35 @@ public class Venue implements Comparable<Venue>, Serializable
                 ct++;
             }
         }
+        openSeats -= numSeats;
     }
     
+    /**Counts the number of rows needed to seat more than what one row can hold
+     * @ param numSeats the number of seats to reserve
+     * @ throws IllegalArgumentException the parameter must be larger than the
+     *                                   total number of columns
+     * @ return The number of rows needed to seat more than what a single row
+     *          can hold
+     */
+    private int generateNumRows (int numSeats)
+    {
+        if (numSeats <= totalCols)
+            throw new IllegalArgumentException("Error: " +
+                "Value entered must be greater than " +
+                totalCols);
+
+        double numRows = 1.0;
+        
+        if (numSeats > totalCols)
+        {
+            numRows = (double) numSeats / totalCols;
+            numRows = Math.ceil(numRows);
+        }
+
+        int rows = (int) numRows;
+        return rows;
+    }
+
    /**Prints string representation of the venue seats
     * @return The string representation of the venue seats
     */

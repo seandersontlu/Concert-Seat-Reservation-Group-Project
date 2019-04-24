@@ -235,7 +235,8 @@ public class Venue implements Comparable<Venue>, Serializable
         }
     }
     
-    /**Reserves seat[s] if the number of seats desired to be reserve can fit in one row,
+    /*
+     * Reserves seat[s]
      * @param numSeats The number of seats to reserve
      * @param row The row you wish to be seated
      */

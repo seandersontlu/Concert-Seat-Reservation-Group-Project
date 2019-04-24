@@ -36,17 +36,20 @@ public class TicketServer implements TicketConstants
 
 
 
-                Venue venue;
+                TreeSet venueSet;
                 String listOfVenues = "Venue:";
+
 
                 try (ObjectInputStream inFile
                     = new ObjectInputStream(new FileInputStream("Venue.ser")))
                 {
-
                     while (true)
                     {
-                        venue = (Venue) inFile.readObject();
-                        listOfVenues += venue;
+                        venueSet = (TreeSet) inFile.readObject();
+                        
+                        Iterator<Venue> iter = venueSet.iterator();
+                        while (iter.hasNext())
+                            listOfVenues += iter.next();
                     }
 
 
@@ -112,7 +115,7 @@ public class TicketServer implements TicketConstants
             outToClient.flush();
             System.out.println("Sent list of events.");
 
-            //TODO Recieves the event from the client
+            //Recieves the event from the client
             
             String chosenEvent = inFromClient.nextLine();
 
@@ -137,7 +140,7 @@ public class TicketServer implements TicketConstants
             
             if (reservationMade)
             {
-                result = "Your reservation has been made";
+                result = "your reservation has been made";
             }
             else
             {

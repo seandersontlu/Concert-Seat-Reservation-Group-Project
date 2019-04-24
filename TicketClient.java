@@ -38,10 +38,10 @@ public class TicketClient implements TicketConstants
 
             //Gets the list of events at the venue
             String listOfEvents = inFromServer.nextLine();
-            System.out.println(listOfEvents);
+            SystemVenue.ser.out.println(listOfEvents);
             System.out.println();
 
-            //TODo Sends the event to the server
+            //Sends the event to the server
             System.out.print("Choose event: ");
             String chosenEvent = scan.nextLine();
             outToServer.println(chosenEvent);
@@ -51,6 +51,7 @@ public class TicketClient implements TicketConstants
             String listOfSections = inFromServer.nextLine();
             System.out.println(listOfSections);
             System.out.println();
+            
             //TODO Sends section and number to server
             String chosenSection = "";
             outToServer.println(chosenSection);

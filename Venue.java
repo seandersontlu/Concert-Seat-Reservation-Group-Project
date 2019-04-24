@@ -239,24 +239,7 @@ public class Venue implements Comparable<Venue>, Serializable
      * @param numSeats The number of seats to reserve
      * @param row The row you wish to be seated
      */
-    public void reserveSeatsInOneRow (int numSeats, int row) 
-    {
-        int ct = 0;
-        for (int i = 0; i < seats[row].size() && ct != numSeats; i++)
-            if (seats[row-1].get(i) != SEAT_TAKEN)
-            {
-                seats[row-1].set(i, SEAT_TAKEN);
-                ct++;
-            }
-        openSeats -= numSeats;
-    }
-
-    /**Reserves seat[s] if the number of seats desired to be reserved fits in
-     * multiple rows
-     * @param numSeats The number of seats to reserve
-     * @param row The starting row you wish to be seated
-     */
-    public void reserveSeatsInMultRows (int numSeats, int row) 
+    public void reserveSeats (int numSeats, int row) 
     {
         int numRows = generateNumRows (numSeats);
         int ct = 0;
@@ -271,21 +254,13 @@ public class Venue implements Comparable<Venue>, Serializable
         }
         openSeats -= numSeats;
     }
-    
-    /**Counts the number of rows needed to seat more than what one row can hold
+
+    /*
+     * Counts the number of rows needed to seat more than what one row can hold
      * @ param numSeats the number of seats to reserve
-     * @ throws IllegalArgumentException the parameter must be larger than the
-     *                                   total number of columns
-     * @ return The number of rows needed to seat more than what a single row
-     *          can hold
      */
     private int generateNumRows (int numSeats)
     {
-        if (numSeats <= totalCols)
-            throw new IllegalArgumentException("Error: " +
-                "Value entered must be greater than " +
-                totalCols);
-
         double numRows = 1.0;
         
         if (numSeats > totalCols)

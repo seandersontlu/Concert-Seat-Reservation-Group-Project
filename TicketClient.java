@@ -38,7 +38,7 @@ public class TicketClient implements TicketConstants
 
             //Gets the list of events at the venue
             String listOfEvents = inFromServer.nextLine();
-            SystemVenue.ser.out.println(listOfEvents);
+            System.out.println(listOfEvents);
             System.out.println();
 
             //Sends the event to the server

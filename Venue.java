@@ -16,7 +16,6 @@ public class Venue implements Comparable<Venue>, Serializable
     private static final String SEAT_OPEN = "O";
     private static final String SEAT_TAKEN = "X";
 
-    private String message;
     private String venueName;
     private String address;
     
@@ -102,9 +101,7 @@ public class Venue implements Comparable<Venue>, Serializable
      */
      public int compareTo(Venue other)
      {
-         int result = venueName.compareTo(other.venueName);
-
-         return result;
+         return venueName.compareTo(other.venueName);
      }
 
     /**Returns a string representation

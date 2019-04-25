@@ -178,17 +178,9 @@ public class AdminController
             // reinitializing the scanner fixes the issue
             scan = new Scanner(System.in);
             String address = scan.nextLine();
-            System.out.print("Enter the amount of sections: ");
-            int numOfSections = scan.nextInt();
-            System.out.print("Enter the amount of rows of seats " + 
-                "for each section: ");
-            int rows = scan.nextInt();
-            System.out.print("Enter the amount of columns of seats " + 
-                "for each section: ");
-            int cols = scan.nextInt();
 
             venueSet.add(new Venue(
-                venueName, address, numOfSections, rows, cols));
+                venueName, address));
             outFile.writeObject(venueSet);
             System.out.println("\nWrote new venue to " + venueFileName);
         }

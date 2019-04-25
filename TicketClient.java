@@ -26,15 +26,22 @@ public class TicketClient implements TicketConstants
                 clientToServer.getInputStream());
 
             //Gets the list of venues from the server.
-            String listOfVenues = inFromServer.nextLine();
-            System.out.println(listOfVenues); 
-            System.out.println();
+            //byte venueList = inFromServer.nextByte();
+            //String venueList = inFromServer.nextLine();
+
+            while (inFromServer.hasNext()) 
+            {
+                System.out.println(inFromServer.nextLine());
+                outToServer.flush();
+            }
+            outToServer.flush();
 
             //Sends a venue to server
-            System.out.print("Choose venue: ");
+            System.out.println("Enter a venue: ");
             String chosenVenue = scan.nextLine();
             outToServer.println(chosenVenue);
             outToServer.flush();
+
 
             //Gets the list of events at the venue
             String listOfEvents = inFromServer.nextLine();

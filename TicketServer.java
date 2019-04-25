@@ -1,159 +1,38 @@
 // TicketServer.java
+// This server is multithreaded.
 
-import java.io.*;
-import java.net.Socket;
+import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.*;
 
 public class TicketServer implements TicketConstants
 {
-    private static Random generator = new Random();
-
-
     public static void main(String[] args) 
     {
-        System.out.println("*** Ticket Server ***\n");
+        ServerSocket welcomeSocket = null;
+        int clientNumber = 1;
 
         try
         {
-            ServerSocket welcomeSocket = new ServerSocket(PORT);
+            welcomeSocket = new ServerSocket(PORT);
+        }
+        catch (IOException e)
+        {
+            System.err.println("Could not listen on port " + PORT);
+            System.exit(1);
+        }
 
-            System.out.printf("Server listening on port %d ...\n", PORT);
+        System.out.println("Server listening on port " + PORT + "...");
 
-            
-            // Always listen for and process connections
+        // Listen for and process connections
+        try
+        {
             while (true)  
             {
-
-                Socket connectionSocket = welcomeSocket.accept();
-
-                System.out.println("Client connected...");
-
-                Scanner inFromClient = new Scanner(
-                    connectionSocket.getInputStream());
-                PrintWriter outToClient = new PrintWriter(
-                    connectionSocket.getOutputStream());
-
-
-
-                TreeSet venueSet;
-                String listOfVenues = "Venue:";
-
-
-                try (ObjectInputStream inFile
-                    = new ObjectInputStream(new FileInputStream("Venue.ser")))
-                {
-                    while (true)
-                    {
-                        venueSet = (TreeSet) inFile.readObject();
-                        
-                        Iterator<Venue> iter = venueSet.iterator();
-                        while (iter.hasNext())
-                            listOfVenues += iter.next();
-                    }
-
-
-                }
-                catch (FileNotFoundException e)
-                {
-                    System.err.println("Could not open file \"Venue.ser\"" +
-                        "for reading");
-                }
-                catch (EOFException e)
-                {
-                    System.out.println("\nReached the end of Venues stores.");
-                }
-                catch (Exception e)
-                {
-                    System.err.println(e);
-
-                }
-            
-            //Sends list of venues out to client
-            
-            outToClient.println(listOfVenues);
-            outToClient.flush();
-
-            //Recieves a venue from the client
-            
-            String chosenVenue = inFromClient.nextLine();
-            System.out.println("Venue recieved from client");
-
-
-            //Sends the list of events at the venue
-
-            String eventFileName = chosenVenue + "Events.ser";
-
-            
-            
-            String listOfEvents = "Events: ";
-
-            try (ObjectInputStream inFile
-                = new ObjectInputStream(new FileInputStream(eventFileName)))
-            {
-                TreeSet<Event> eventSet 
-                    = (TreeSet<Event>) inFile.readObject();
-
-                Iterator<Event> iter = eventSet.iterator();
-                while (iter.hasNext())
-                {
-                    listOfEvents += iter.next();
-                }
-
-            }
-            catch (FileNotFoundException e)
-            {
-                System.err.println("Could not open file" + eventFileName 
-                + "for reading, please check the spelling and try again.");
-            }
-            catch (Exception e)
-            {
-                System.err.println("Error");
-            }
-
-            outToClient.println(listOfEvents);
-            outToClient.flush();
-            System.out.println("Sent list of events.");
-
-            //Recieves the event from the client
-            
-            String chosenEvent = inFromClient.nextLine();
-
-            //TODO Sends the sections to the client
-
-            
-            String listOfSections = "Sections: ";
-            outToClient.print(listOfSections);
-            outToClient.flush();
-
-            //TODO Recieves a section and number from the client
-
-            String section = inFromClient.nextLine();
-            int num = inFromClient.nextInt();
-
-            //TODO Makes reservation and confirms reservation OR sends error message if the reservation is
-            //impossible 
-            
-            Boolean reservationMade = true;
-
-            String result;
-            
-            if (reservationMade)
-            {
-                result = "your reservation has been made";
-            }
-            else
-            {
-                result = "Not enough remaining seats in section." 
-                    + " Please try again.";
-            }
-            
-            System.out.println(result);
-            outToClient.println(result);
-            outToClient.flush();
-            connectionSocket.close();
-
-
+                TicketTask task = new TicketTask(
+                    clientNumber, welcomeSocket.accept());
+                new Thread(task).start();
+                clientNumber++;
+                System.out.println("A client successfully connected...");
             }
         }
         catch (IOException e)
@@ -162,3 +41,4 @@ public class TicketServer implements TicketConstants
         }
     }
 }
+

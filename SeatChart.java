@@ -7,7 +7,7 @@
 import java.util.*;
 import java.io.*;
 
-public class SeatChart
+public class SeatChart implements TicketConstants 
 {
     private static final String SEAT_OPEN = "O";
     private static final String SEAT_TAKEN = "X";
@@ -17,8 +17,8 @@ public class SeatChart
     private int rowsPerSect;
     private int colsPerSect;
     private int openSeats;
-
-     /* 
+     /*
+     * Creates the SeatChart object
      * @param numSections the number of sections of seats
      * @param rowsPerSect the number of rows in each section
      * @param colsPerSect   the number of columns in each section
@@ -29,6 +29,19 @@ public class SeatChart
         this.rowsPerSect = rowsPerSect;
         this.colsPerSect = colsPerSect;
         seats = new LinkedList[rowsPerSect * numSections];
+        openSeats = getNumSeats();
+        arrangeSeats();
+    }
+
+    /** Default constructor
+     */
+    public SeatChart()
+    {
+        this.numSections = NUM_SECTIONS;
+        this.rowsPerSect = ROWS_PER_SECTION;
+        this.colsPerSect = COLS_PER_SECTION;
+        seats = new LinkedList[rowsPerSect * numSections];
+        openSeats = getNumSeats();
         arrangeSeats();
     }
     
@@ -100,6 +113,24 @@ public class SeatChart
     {
         return numSections * getSeatsPerSection();
     }
+
+    /*
+     * Gets the number of open seats
+     * @return  the total number of open seats
+     */
+    public int getOpenSeats()
+    {
+        return openSeats;
+    }
+
+    /*
+     * Gets the number of taken seats
+     * @return  the total number of taken seats
+     */
+    public int getTakenSeats()
+    {
+        return (getNumSeats() - openSeats);
+    }
     
     /*
      * Gets the seats in a given section
@@ -118,23 +149,10 @@ public class SeatChart
         for (int i = 0; i < sectSeats.length; i++)
             sectSeats[i] = seats[start+i];
         return sectSeats;
-        
-        /* If you want to test this method for yourself, the following piece of
-         * code will print the results.
-         * 
-         * System.out.println("Section " + section + ":");
-         * for (int i = 0; i < sectSeats.length; i++)
-         *   System.out.print(sectSeats[i] + "\n");
-        */
     }
     
-    public String displaySection()
-    {
-        String result = "";
-        return result;
-    }
-
-    /**Sets the number of the sections
+    /*
+     * Sets the number of the sections
      * @param num  the new value
      * /
     public void setNumSections(int num)
@@ -142,7 +160,8 @@ public class SeatChart
         numSections = num;
     }
 
-    /** Sets the number of rows per section
+    /*
+     * Sets the number of rows per section
      * @param num  the new value
      */
     public void setRowsPerSections(int num)
@@ -150,15 +169,24 @@ public class SeatChart
         rowsPerSect = num;
     }
     
-    /** Sets the number of columns
+    /*
+     * Sets the number of columns
      * @param num  the new value
      */
     public void setColsPerSection (int num)
     {
         colsPerSect = num;
     }
-        
 
+    /*
+     * sets the size of the seat array
+     * @param num  the new size if seats[] 
+     */
+    public void setSeats (int num)
+    {
+        seats = new LinkedList[num];
+    }
+        
     /**Resets the seats to SEAT_OPEN
      */
     public void resetSeats()
@@ -174,13 +202,38 @@ public class SeatChart
         {
             seats[i] = new LinkedList();
             for (int j = 0; j < colsPerSect; j++)
-                seats[i].add("R"+(i+1)+"-" +(j+1));
+                seats[i].add(SEAT_OPEN);
         }
     }
     
     /*
+     * Reserves seat[s]
+     * @param numSeats The number of seats to reserve
+     * @param section The section you wish to be seated
+     */
+    public void reserveSeats (int numSeats, int section) 
+    {
+        int ct = 0;
+        LinkedList[] sect = getSectionSeats (section);
+        int numRows = generateNumRows (numSeats);
+
+        //for (int i = row - 1; i < (row-1) + numRows; i++)
+        for (int i = 0; i < sect.length; i++)
+        {
+            for (int j = 0; j < sect[i].size() && ct != numSeats; j++)
+            {
+                if (sect[i].get(j) == SEAT_OPEN)
+                    sect[i].set(j, SEAT_TAKEN);
+                ct++;
+            }
+        }
+        openSeats -= numSeats;
+    }
+    
+    /*
      * Counts the number of rows needed to seat more than what one row can hold
-     * @ param numSeats the number of seats to reserve
+     * @ param  numSeats the number of seats to reserve
+     * @ return  the number of rows needed to seat a given number 
      */
     private int generateNumRows (int numSeats)
     {
@@ -196,24 +249,29 @@ public class SeatChart
         return rows;
     }
 
-   /**Prints string representation of the venue seats
+   /*
+    * Prints string representation of the venue seats
     * @return The string representation of the venue seats
     */
     public String toString()
     {
-        int sectCount = 1;
+        int sectCount = numSections;
         String result = "";
-        result += "\nSection 1: \n";
-        
-        for (int i = 0; i < seats.length ; i++)
+        result += "\nSection " + sectCount + ": \n";
+        sectCount -= 1;
+
+        for (int i = seats.length; i > 0 ; i--)
         {
             if (i == rowsPerSect * (sectCount))
             {
-                result += "\nSection " + (sectCount+1) + ": \n";
-                sectCount++;
+                result += "\nSection " + sectCount + ": \n";
+                sectCount--;
             }
-            result += seats[i] + "\n";
+            result += seats[i-1] + "\n";
         }
+        result += "\n----------------";
+        result += "\n|     Stage    |";
+        result += "\n----------------\n";
 
         return result;
     }

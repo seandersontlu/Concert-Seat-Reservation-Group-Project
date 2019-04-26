@@ -11,16 +11,21 @@ public class Event implements Comparable<Event>, Serializable
     private String date;
     private String startTime;
     private String endTime;
+    private double facePrice;
+    private double sectionFee;
+    private SeatChart seating;
     
     /** Creates the Event object
      */
     public Event(String eventTitle, String date, 
-        String startTime, String endTime)
+        String startTime, String endTime, double facePrice)
     {
         this.eventTitle = eventTitle;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.facePrice = facePrice;
+        seating = new SeatChart();
     }
 
     /*
@@ -58,6 +63,30 @@ public class Event implements Comparable<Event>, Serializable
     {
         return endTime;
     }
+    
+    /*
+     * gets the face value of the ticket 
+     * @return  face price of the ticket
+     */
+    public double getFacePrice()
+    {
+        return facePrice;
+    }
+
+    public double getSectionFee(int section)
+    {
+        return (section * 0.10);
+    }
+    
+
+    /*
+     * gets the seating chart
+     * @return  the seating chart
+     */
+    public SeatChart getSeatChart()
+    {
+        return seating;
+    }
 
     /*
      * sets the title of the event
@@ -94,27 +123,40 @@ public class Event implements Comparable<Event>, Serializable
     {
         endTime = time;
     }
+    
+    /*
+     * sets the face price of the ticket
+     * @param newPrice  the new price of the ticket
+     */
+    public void setFacePrice (double newPrice)
+    {
+        facePrice = newPrice;
+    }
 
     /*
-     * Reserves seat[s]
-     * @param numSeats The number of seats to reserve
-     * @param row The row you wish to be seated
-    public void reserveSeats (int numSeats, int row) 
-    {
-        int numRows = generateNumRows (numSeats);
-        int ct = 0;
-        for (int i = row - 1; i < (row-1) + numRows; i++)
-        {
-            for (int j = 0; j < totalCols && ct != numSeats; j++)
-            {
-                if (seats[i].get(j) != SEAT_TAKEN)
-                    seats[i].set(j, SEAT_TAKEN);
-                ct++;
-            }
-        }
-        openSeats -= numSeats;
-    }
+     * buys the tickets
+     * @param numTickets 
+     * @param section   section number
+     * @return  totalPrice of a ticket
      */
+    public void buyTickets(int numTickets, int section)
+    {
+        if (seating.getOpenSeats() < numTickets)
+            throw new IllegalArgumentException("Error: We do not have " + 
+                numTickets + " seats available");
+
+        seating.reserveSeats(numTickets, section);
+    }
+
+    /*
+     * Calculates the total price of the tickets
+     * @param section   section number
+     * @return  totalPrice of a ticket
+     */
+    public double caclulateTicketPrice(int section)
+    {
+        return facePrice + (facePrice * getSectionFee(section));
+    }
 
     public boolean equals(Object obj)
     {
@@ -146,6 +188,10 @@ public class Event implements Comparable<Event>, Serializable
         return result;
     }
 
+    /*
+     * Creates a string representation for the event
+     * @return  string representation 
+     */
     public String toString()
     {
         return (eventTitle + " - " + date +

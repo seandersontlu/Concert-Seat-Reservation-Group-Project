@@ -143,9 +143,11 @@ public class AdminController
                     String startTime = scan.nextLine();
                     System.out.print("Enter the ending time: ");
                     String endTime = scan.nextLine();
+                    System.out.print("Enter the event price: ");
+                    double facePrice = scan.nextDouble(); 
                         
                     eventSet.add(new Event(
-                        eventTitle, date, startTime, endTime));
+                        eventTitle, date, startTime, endTime, facePrice));
                 }
 
             }while(!finished);

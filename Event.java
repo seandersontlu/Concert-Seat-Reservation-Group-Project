@@ -2,7 +2,8 @@
 // CSCI 434, Project #2
 // 4/1/19
 
-import java.io.Serializable;
+import java.util.*;
+import java.io.*;
 
 public class Event implements Comparable<Event>, Serializable
 {
@@ -10,90 +11,111 @@ public class Event implements Comparable<Event>, Serializable
     private String date;
     private String startTime;
     private String endTime;
-
-    /**Creates an event object.
-     * @param eventTitle
-     * @param date
-     * @param startTime
-     * @param endTime
+    
+    /** Creates the Event object
      */
-    public Event(String eventTitle, String date,
-                 String startTime, String endTime)
+    public Event(String eventTitle, String date, 
+        String startTime, String endTime)
     {
         this.eventTitle = eventTitle;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
     }
-    
-    /** Returns the title of the event
-     * @return eventTitle
+
+    /*
+     * gets the title of the event 
+     * @return  the event title
      */
     public String getEventTitle()
     {
         return eventTitle;
     }
-    
-    /** Returns the date of the event
-     * @return date
+
+    /*
+     * gets the date when the event will occur
+     * @return  the date
      */
     public String getDate()
     {
         return date;
     }
 
-    /** Returns the start time of the event
-     * @return startTime
+    /*
+     * gets the time when the event starts
+     * @return  the start time
      */
     public String getStartTime()
     {
         return startTime;
     }
 
-    /** Returns the end time of the event. 
-     * @return endTime
+    /*
+     * gets the time when the event is over
+     * @return  the end time
      */
     public String getEndTime()
     {
         return endTime;
     }
 
-    /** Updates the title of an event
-     * @param title
+    /*
+     * sets the title of the event
+     * @param title  the new title
      */
     public void setEventTitle(String title)
     {
         eventTitle = title;
     }
 
-    /** Updates the date of the event
-     * @param newDate
+    /*
+     * sets the date when the event will occue
+     * @param newDate  the new date
      */
     public void setDate(String newDate)
     {
         date = newDate;
     }
-    
-    /** Updates the start time of the event
-     * @param time
+
+    /*
+     * sets the time when the event starts
+     * @param time  the new start time
      */
     public void setStartTime(String time)
     {
         startTime = time;
     }
-
-    /** Updates the end time of the event.
-     * @param time
+    
+    /*
+     * sets the time when the event is over
+     * @param time  the new end time
      */
     public void setEndTime(String time)
     {
         endTime = time;
     }
 
-    /** Determines if two event objects are equal
-     * @param obj
-     * @return result
+    /*
+     * Reserves seat[s]
+     * @param numSeats The number of seats to reserve
+     * @param row The row you wish to be seated
+    public void reserveSeats (int numSeats, int row) 
+    {
+        int numRows = generateNumRows (numSeats);
+        int ct = 0;
+        for (int i = row - 1; i < (row-1) + numRows; i++)
+        {
+            for (int j = 0; j < totalCols && ct != numSeats; j++)
+            {
+                if (seats[i].get(j) != SEAT_TAKEN)
+                    seats[i].set(j, SEAT_TAKEN);
+                ct++;
+            }
+        }
+        openSeats -= numSeats;
+    }
      */
+
     public boolean equals(Object obj)
     {
         Event other;
@@ -111,10 +133,6 @@ public class Event implements Comparable<Event>, Serializable
         return result;
     }
 
-    /** Compares two event objects
-     * @param other
-     * @return result
-     */
     public int compareTo(Event other)
     {
         int result = eventTitle.compareTo(other.eventTitle);
@@ -128,34 +146,9 @@ public class Event implements Comparable<Event>, Serializable
         return result;
     }
 
-    /** Converts event object into string
-     * @return String
-     */
     public String toString()
     {
         return (eventTitle + " - " + date +
             " - " + startTime + "-" + endTime);
     }       
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

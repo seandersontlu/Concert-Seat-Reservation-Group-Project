@@ -29,12 +29,13 @@ public class TicketClient implements TicketConstants
             //byte venueList = inFromServer.nextByte();
             //String venueList = inFromServer.nextLine();
 
-            while (inFromServer.hasNext()) 
+
+            String line;
+            do 
             {
-                System.out.println(inFromServer.nextLine());
-                outToServer.flush();
-            }
-            outToServer.flush();
+                line = inFromServer.nextLine();
+                System.out.println(line);
+            } while (!line.equals(END_OF_FILE));
 
             //Sends a venue to server
             System.out.println("Enter a venue: ");

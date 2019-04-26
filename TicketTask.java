@@ -46,6 +46,11 @@ public class TicketTask implements TicketConstants, Runnable
                     outToClient.flush();
                 }
             }
+            outToClient.println("\nEnd of venues.");
+            outToClient.flush();
+            outToClient.println(END_OF_FILE);
+            outToClient.flush();
+            System.out.println(END_OF_FILE);
 
             /*
             byte[] bytes = listOfVenues.getBytes();
@@ -58,6 +63,7 @@ public class TicketTask implements TicketConstants, Runnable
 
             String chosenVenue = inFromClient.nextLine();
 
+            System.out.println("Received chosen venue " + chosenVenue);
             try
             {
                 String eventFileName = chosenVenue + "Events.ser";

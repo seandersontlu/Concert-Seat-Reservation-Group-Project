@@ -1,3 +1,5 @@
+// Montrell Wiley, David Glenewinkel, Sarah Anderson
+// CSCI 434, Project #2
 // TicketServer.java
 // This server is multithreaded.
 

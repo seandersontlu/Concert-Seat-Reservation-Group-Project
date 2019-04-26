@@ -1,3 +1,6 @@
+// Montrell Wiley, David Glenewinkel, Sarah Anderson
+// CSCI 434, Project #2
+// 4/26/19
 
 import java.io.*;
 import java.net.*;

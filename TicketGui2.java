@@ -7,6 +7,8 @@ import javax.swing.*;
 public class TicketGui2 extends JFrame implements TicketConstants
 {
     // Initialize values
+    SeatChart seating;
+
     public static void main (String[] args)
     {
         TicketGui2 window = new TicketGui2();
@@ -21,7 +23,8 @@ public class TicketGui2 extends JFrame implements TicketConstants
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
        
-        
+        seating = new SeatChart();
+
         JLabel titleLabel = new JLabel("Welecome to the ticket reservation system");
         JLabel instruction1 = new JLabel("Please select the event and the venue");
         JLabel instruction2 = new JLabel("Please select a section and enter " +
@@ -50,6 +53,10 @@ public class TicketGui2 extends JFrame implements TicketConstants
         
         JTextField numSeatsTextField = new JTextField("Enter number of seats");
         
+        JPanel[] venuePanel = new JPanel[seating.getNumSections()];
+        for (int i = 0; i < venuePanel.length; i++)
+            venuePanel[i] = new VenueView();
+        
         setLayout(new FlowLayout(FlowLayout.LEFT));
         buttonPanel.add(submitButton);
         step1Panel.add(venueComboBox);
@@ -66,7 +73,13 @@ public class TicketGui2 extends JFrame implements TicketConstants
         topPanel.add(buttonPanel);
         
 
+        JPanel venueGrid = new JPanel(new GridLayout(seating.getRowsPerSect(),
+            seating.getColsPerSect()));
+        for (int i = 0; i < venuePanel.length; i++)
+            venueGrid.add(venuePanel[i]);
+
         add(topPanel, BorderLayout.NORTH);
+        add(venueGrid, BorderLayout.SOUTH);
     }
     
     /* VenueComboBox listener 

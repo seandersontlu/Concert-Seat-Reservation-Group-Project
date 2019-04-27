@@ -7,7 +7,7 @@
 import java.util.*;
 import java.io.*;
 
-public class SeatChart implements TicketConstants 
+public class SeatChart implements TicketConstants, Serializable 
 {
     private static final String SEAT_OPEN = "O";
     private static final String SEAT_TAKEN = "X";

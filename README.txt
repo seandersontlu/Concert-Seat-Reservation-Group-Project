@@ -160,33 +160,23 @@ Venue class
     This class creates the Venue object and associated methods.
     Methods within the Venue class include:
 
-    public Venue(String venueName, String address, int numSeats, int[][] seats)
+    public Venue(String venueName, String address)
             -- Creates the venue object.
     public String getVenueName()
             -- Returns the venueName.
     public String getAddress()
             -- Returns the address.
-    public int getRow()
-            -- Returns the row.
-    public int getCol()
-            -- Returns the col.
-    public in getNumSeats()
-            -- Returns numSeats.
-    public int[][] getSeats()
-            -- Returns array of seats
     public void setVenueName(String name)
             -- Updates the venueName.
     public void setAddress(String venueAddress)
             -- Updates the address.
-    public void setNumSeats(int num)
-            -- Updates numSeats.
-    public void setSeats(int row, int col)
-            -- Arranges seats in a 2D array.
-    public int numOpenSeats()
-            -- Returns number of open seats.
-    public int numTakenSeats()
-            -- Returns number of taken seats.
-    public boolean isSeatTaken(int row, int col)
-            -- Determines if a seat is taken.
-    public boolean isSeatOpen(int row, int col)
-            -- Determines if a seat is open.
+    public TreeSet getEventSet()
+            -- Returns the TreeSet of events
+    public void createTreeSet()
+            -- Creates the tree set of events associated with a venue.
+    public int compareTo(Venue other)
+            -- compares two venue objects
+    public String toString()
+            -- Returns the venue as a string.
+
+

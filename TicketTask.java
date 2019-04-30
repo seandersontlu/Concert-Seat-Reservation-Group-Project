@@ -55,46 +55,135 @@ public class TicketTask implements TicketConstants, Runnable
             outToClient.flush();
             System.out.println(END_OF_FILE);
 
-            /*
-            byte[] bytes = listOfVenues.getBytes();
-            outToClient.print(bytes);
-            outToClient.flush();
-            */
-
-
             System.out.println("Reading input from user " + clientNumber + "...");
 
-            String chosenVenue = inFromClient.nextLine();
+            String chosenEvent = inFromClient.nextLine();
+            System.out.println("Received chosen event " + chosenEvent
+                + " from user " + clientNumber);
+            int chosenSection = inFromClient.nextInt();
+            System.out.println("Received chosen section " + chosenSection
+                + " from user " + clientNumber);
+            int chosenTickets = inFromClient.nextInt();
+            System.out.println("Received chosen tickets " + chosenTickets
+                + " from user " + clientNumber);
 
-            System.out.println("Received chosen venue " + chosenVenue);
-            try
+            // For testing purposes
+            String currentEventFile = searchForEvent(chosenEvent);
+            System.out.println("\nSearched for event: " + chosenEvent);
+            System.out.println("Result event file: " + currentEventFile);
+
+            try (ObjectInputStream tempInFile
+                = new ObjectInputStream(new
+                FileInputStream(currentEventFile)))
             {
-                String eventFileName = chosenVenue + "Events.ser";
-                File eventFile = new File(eventFileName);
-                if (!eventFile.exists())
-                {
-                    outToClient.print("There are no events available for this venue");
-                }
+                eventSet = (TreeSet<Event>) inFile.readObject();
 
-                else
+                try (ObjectOutputStream outFile
+                    = new ObjectOutputStream(new
+                    FileOutputStream(currentEventFile)))
                 {
-                    try (ObjectInputStream tempInFile
-                        = new ObjectInputStream(new FileInputStream(eventFileName)))
+                    Event currentEvent;
+                    String currentTitle = "";
+
+                    Iterator<Event> iter = eventSet.iterator();
+                    while (iter.hasNext())
                     {
-                        eventSet = (TreeSet) tempInFile.readObject();
+                        currentEvent = iter.next();
+                        currentTitle = currentEvent.getEventTitle();
+                        
+                        //Testing
+                        System.out.println(currentEvent);
+
+                        if (currentTitle.equals(chosenEvent))
+                        {
+                            currentEvent.buyTickets(
+                                chosenTickets, chosenSection);
+                            System.out.println("\n\nAfter buying tickets\n");
+                        }
+                        
                     }
+                    //Testing
+                    System.out.println("\n\nSet after buying tickets\n");
+                    iter = eventSet.iterator();
+                    while (iter.hasNext())
+                        System.out.println(iter.next());
+                    outFile.writeObject(eventSet);
+                }
+                catch (Exception e)
+                {
+                    System.err.print("Barfed inside inner loop " + e);
                 }
             }
             catch (Exception e)
             {
-                System.err.print(e);
+                System.err.print("Barfed inside outer loop " + e);
             }
+
+            socket.close();
+
+
+        }
+        catch (EOFException e)
+        {
+            System.out.println("\nReached the end of venues stored.");
         }
         catch (Exception e)
         {
             System.err.print(e);
         }
     }
+
+
+    private String searchForEvent(String search)
+    {
+        String result = "";
+
+        try (ObjectInputStream inFile
+            = new ObjectInputStream(new FileInputStream("Venue.ser")))
+        {
+            Event currentEvent;
+            TreeSet venueSet;
+            TreeSet eventSet;
+            Venue tempVenue;
+            String eventName = "";
+    
+            venueSet = (TreeSet) inFile.readObject();
+            Iterator<Venue> venueIter = venueSet.iterator();
+            Iterator<Event> eventIter;
+            while (venueIter.hasNext())
+            {
+                tempVenue = venueIter.next();
+                eventSet = tempVenue.getEventSet();
+                eventIter = eventSet.iterator();
+                while (eventIter.hasNext())
+                {
+                    currentEvent = eventIter.next();
+                    eventName = currentEvent.getEventTitle();
+
+                    if (eventName.equals(search))
+                        result = tempVenue.getFileName();
+
+                }
+            }
+
+        }
+        catch (FileNotFoundException e)
+        {
+            System.err.print(e);
+        }
+        catch (EOFException e)
+        {
+            System.out.println("\nReached the end of events stored.");
+        }
+        catch (Exception e)
+        {
+            System.err.print(e);
+        }
+        
+        return result;
+
+    }
+
 }
                     
 

@@ -194,7 +194,7 @@ public class Event implements Comparable<Event>, Serializable
      */
     public String toString()
     {
-        return (eventTitle + " - " + date +
+        return ("($" + facePrice + ") " + eventTitle + " - " + date +
             " - " + startTime + "-" + endTime);
     }       
 }

@@ -49,6 +49,14 @@ public class Venue implements Comparable<Venue>, Serializable
     {
         return address;
     }
+
+    /** Gets file name of the events for this venue
+     * @return  the file name of events
+     */
+     public String getFileName()
+     {
+         return fileName;
+     }
     
     /** Sets name of the venue
      */

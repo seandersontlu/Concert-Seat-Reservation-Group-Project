@@ -3,10 +3,9 @@
 // Submitted: 4/5/2019
 // Venue.java
 
-/*
- * This class represents the Venue where the event will be held
- * @author  Sarah Anderson, Montrel Wiley, David Glenewinkel
- */
+ /** This class represents the Venue where the event will be held
+  * @author  Sarah Anderson, Montrel Wiley, David Glenewinkel
+  */
 
 import java.util.*;
 import java.io.*;
@@ -59,6 +58,7 @@ public class Venue implements Comparable<Venue>, Serializable
      }
     
     /** Sets name of the venue
+     * @param name The inputted name to be set
      */
     public void setVenueName(String name)
     {
@@ -66,6 +66,7 @@ public class Venue implements Comparable<Venue>, Serializable
     }
     
     /** Sets the address of the venue
+     * @param venueAddress The inputted address to be set
      */
     public void setAddress(String venueAddress)
     {

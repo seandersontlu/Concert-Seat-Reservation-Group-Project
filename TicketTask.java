@@ -169,8 +169,7 @@ public class TicketTask implements TicketConstants, Runnable
     }
 
 
-    /*
-     * Searches each Venue's event set
+     /** Searches each Venue's event set
      * for the given event and determines if
      * there is a match
      * @param search

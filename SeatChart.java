@@ -17,8 +17,8 @@ public class SeatChart implements TicketConstants, Serializable
     private int rowsPerSect;
     private int colsPerSect;
     private int openSeats;
-     /*
-     * Creates the SeatChart object
+     
+     /** Creates the SeatChart object
      * @param numSections the number of sections of seats
      * @param rowsPerSect the number of rows in each section
      * @param colsPerSect   the number of columns in each section
@@ -45,8 +45,7 @@ public class SeatChart implements TicketConstants, Serializable
         arrangeSeats();
     }
     
-    /*
-     * Gets the array representing the seats
+     /** Gets the array representing the seats
      * @return  the array of seats
      */
     public LinkedList[] getSeats()
@@ -78,8 +77,7 @@ public class SeatChart implements TicketConstants, Serializable
         return colsPerSect;
     }
     
-    /*
-     * Calculates the number of seats per section
+     /** Calculates the number of seats per section
      * @return  the number of seats per Section
      */
     public int getSeatsPerSection()
@@ -87,8 +85,7 @@ public class SeatChart implements TicketConstants, Serializable
         return rowsPerSect * colsPerSect;
     }
 
-    /*
-     * Calculates the total number of rows
+     /** Calculates the total number of rows
      * @return  the number of row of seats
      */
     public int getTotalRows()
@@ -96,8 +93,7 @@ public class SeatChart implements TicketConstants, Serializable
         return rowsPerSect * numSections;
     }
 
-    /*
-     * Calculates the total number of columns
+     /** Calculates the total number of columns
      * @return  the number of columns of seats
      */
     public int getTotalCols()
@@ -105,8 +101,7 @@ public class SeatChart implements TicketConstants, Serializable
         return colsPerSect * numSections;
     }
 
-    /*
-     * Gets the number seats
+     /** Gets the number seats
      * @return  the total number of seats in the venue
      */
     public int getNumSeats()
@@ -114,8 +109,7 @@ public class SeatChart implements TicketConstants, Serializable
         return numSections * getSeatsPerSection();
     }
 
-    /*
-     * Gets the number of open seats
+     /** Gets the number of open seats
      * @return  the total number of open seats
      */
     public int getOpenSeats()
@@ -123,8 +117,7 @@ public class SeatChart implements TicketConstants, Serializable
         return openSeats;
     }
 
-    /*
-     * Gets the number of taken seats
+     /** Gets the number of taken seats
      * @return  the total number of taken seats
      */
     public int getTakenSeats()
@@ -132,8 +125,7 @@ public class SeatChart implements TicketConstants, Serializable
         return (getNumSeats() - openSeats);
     }
     
-    /*
-     * Gets the seats in a given section
+     /** Gets the seats in a given section
      * @param section   the section number
      * @throw IllegalArgumentException  the specified section doesn't exist
      * @return  the seats in the specified section
@@ -151,8 +143,7 @@ public class SeatChart implements TicketConstants, Serializable
         return sectSeats;
     }
     
-    /*
-     * Sets the number of the sections
+     /** Sets the number of the sections
      * @param num  the new value
      * /
     public void setNumSections(int num)
@@ -160,8 +151,7 @@ public class SeatChart implements TicketConstants, Serializable
         numSections = num;
     }
 
-    /*
-     * Sets the number of rows per section
+     /** Sets the number of rows per section
      * @param num  the new value
      */
     public void setRowsPerSections(int num)
@@ -169,8 +159,7 @@ public class SeatChart implements TicketConstants, Serializable
         rowsPerSect = num;
     }
     
-    /*
-     * Sets the number of columns
+     /** Sets the number of columns
      * @param num  the new value
      */
     public void setColsPerSection (int num)
@@ -178,8 +167,7 @@ public class SeatChart implements TicketConstants, Serializable
         colsPerSect = num;
     }
 
-    /*
-     * sets the size of the seat array
+     /** Sets the size of the seat array
      * @param num  the new size if seats[] 
      */
     public void setSeats (int num)
@@ -206,8 +194,7 @@ public class SeatChart implements TicketConstants, Serializable
         }
     }
     
-    /*
-     * Reserves seat[s]
+     /** Reserves seat[s]
      * @param numSeats The number of seats to reserve
      * @param section The section you wish to be seated
      */
@@ -230,8 +217,7 @@ public class SeatChart implements TicketConstants, Serializable
         openSeats -= numSeats;
     }
     
-    /*
-     * Counts the number of rows needed to seat more than what one row can hold
+     /** Counts the number of rows needed to seat more than what one row can hold
      * @ param  numSeats the number of seats to reserve
      * @ return  the number of rows needed to seat a given number 
      */
@@ -249,8 +235,7 @@ public class SeatChart implements TicketConstants, Serializable
         return rows;
     }
 
-   /*
-    * Prints string representation of the venue seats
+    /** Prints string representation of the venue seats
     * @return The string representation of the venue seats
     */
     public String toString()

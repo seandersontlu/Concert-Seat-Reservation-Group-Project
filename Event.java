@@ -16,6 +16,11 @@ public class Event implements Comparable<Event>, Serializable
     private SeatChart seating;
     
     /** Creates the Event object
+     * @param eventTitle The inputted title of the event
+     * @param date The inputted date of the event
+     * @param startTime The inputted starting time of the event
+     * @param endTime The inputted ending time of the event
+     * @param facePrice The inputted face value of one ticket for the event
      */
     public Event(String eventTitle, String date, 
         String startTime, String endTime, double facePrice)
@@ -28,8 +33,7 @@ public class Event implements Comparable<Event>, Serializable
         seating = new SeatChart();
     }
 
-    /*
-     * gets the title of the event 
+     /** Gets the title of the event 
      * @return  the event title
      */
     public String getEventTitle()
@@ -37,8 +41,7 @@ public class Event implements Comparable<Event>, Serializable
         return eventTitle;
     }
 
-    /*
-     * gets the date when the event will occur
+     /** Gets the date when the event will occur
      * @return  the date
      */
     public String getDate()
@@ -46,8 +49,7 @@ public class Event implements Comparable<Event>, Serializable
         return date;
     }
 
-    /*
-     * gets the time when the event starts
+     /** Gets the time when the event starts
      * @return  the start time
      */
     public String getStartTime()
@@ -55,8 +57,7 @@ public class Event implements Comparable<Event>, Serializable
         return startTime;
     }
 
-    /*
-     * gets the time when the event is over
+     /** Gets the time when the event is over
      * @return  the end time
      */
     public String getEndTime()
@@ -64,8 +65,7 @@ public class Event implements Comparable<Event>, Serializable
         return endTime;
     }
     
-    /*
-     * gets the face value of the ticket 
+     /** Gets the face value of the ticket 
      * @return  face price of the ticket
      */
     public double getFacePrice()
@@ -79,8 +79,7 @@ public class Event implements Comparable<Event>, Serializable
     }
     
 
-    /*
-     * gets the seating chart
+     /** Gets the seating chart
      * @return  the seating chart
      */
     public SeatChart getSeatChart()
@@ -88,8 +87,7 @@ public class Event implements Comparable<Event>, Serializable
         return seating;
     }
 
-    /*
-     * sets the title of the event
+     /** Sets the title of the event
      * @param title  the new title
      */
     public void setEventTitle(String title)
@@ -97,8 +95,7 @@ public class Event implements Comparable<Event>, Serializable
         eventTitle = title;
     }
 
-    /*
-     * sets the date when the event will occue
+     /** Sets the date when the event will occue
      * @param newDate  the new date
      */
     public void setDate(String newDate)
@@ -106,8 +103,7 @@ public class Event implements Comparable<Event>, Serializable
         date = newDate;
     }
 
-    /*
-     * sets the time when the event starts
+     /** Sets the time when the event starts
      * @param time  the new start time
      */
     public void setStartTime(String time)
@@ -115,17 +111,15 @@ public class Event implements Comparable<Event>, Serializable
         startTime = time;
     }
     
-    /*
-     * sets the time when the event is over
+     /** Sets the time when the event is over
      * @param time  the new end time
      */
     public void setEndTime(String time)
     {
         endTime = time;
     }
-    
-    /*
-     * sets the face price of the ticket
+
+     /** Sets the face price of the ticket
      * @param newPrice  the new price of the ticket
      */
     public void setFacePrice (double newPrice)
@@ -133,8 +127,7 @@ public class Event implements Comparable<Event>, Serializable
         facePrice = newPrice;
     }
 
-    /*
-     * buys the tickets
+     /** Buys the tickets
      * @param numTickets 
      * @param section   section number
      * @return  totalPrice of a ticket
@@ -148,8 +141,7 @@ public class Event implements Comparable<Event>, Serializable
         seating.reserveSeats(numTickets, section);
     }
 
-    /*
-     * Calculates the total price of the tickets
+     /** Calculates the total price of the tickets
      * @param section   section number
      * @return  totalPrice of a ticket
      */
@@ -158,6 +150,11 @@ public class Event implements Comparable<Event>, Serializable
         return facePrice + (facePrice * getSectionFee(section));
     }
 
+    /** Determines if two Event objects are equal.
+     * @param obj The other Event object
+     * @return result Returns the boolean value that determines if both events
+     * are equal to each other or not.
+     */
     public boolean equals(Object obj)
     {
         Event other;
@@ -175,6 +172,12 @@ public class Event implements Comparable<Event>, Serializable
         return result;
     }
 
+    /** Compares two Event objects
+     * @param other The other Event object that is being compared to
+     * @return result Returns the int value that determines if the first event
+     * is greater than, less than, or equal to the other Event object.
+     *
+     */
     public int compareTo(Event other)
     {
         int result = eventTitle.compareTo(other.eventTitle);
@@ -188,8 +191,7 @@ public class Event implements Comparable<Event>, Serializable
         return result;
     }
 
-    /*
-     * Creates a string representation for the event
+     /** Creates a string representation for the event
      * @return  string representation 
      */
     public String toString()

@@ -60,6 +60,12 @@ public class TicketTask implements TicketConstants, Runnable
             String chosenEvent = inFromClient.nextLine();
             System.out.println("Received chosen event " + chosenEvent
                 + " from user " + clientNumber);
+            // For testing purposes
+            String currentEventFile = searchForEvent(chosenEvent);
+            System.out.println("\nSearched for event: " + chosenEvent);
+            System.out.println("Result event file: " + currentEventFile);
+            //
+
             int chosenSection = inFromClient.nextInt();
             System.out.println("Received chosen section " + chosenSection
                 + " from user " + clientNumber);
@@ -67,58 +73,87 @@ public class TicketTask implements TicketConstants, Runnable
             System.out.println("Received chosen tickets " + chosenTickets
                 + " from user " + clientNumber);
 
-            // For testing purposes
-            String currentEventFile = searchForEvent(chosenEvent);
-            System.out.println("\nSearched for event: " + chosenEvent);
-            System.out.println("Result event file: " + currentEventFile);
 
+
+            // Actual purchasing tickets process
+            //
             try (ObjectInputStream tempInFile
                 = new ObjectInputStream(new
                 FileInputStream(currentEventFile)))
             {
-                eventSet = (TreeSet<Event>) inFile.readObject();
+                eventSet = (TreeSet<Event>) tempInFile.readObject();
+                Event currentEvent;
+                String currentTitle = "";
 
-                try (ObjectOutputStream outFile
-                    = new ObjectOutputStream(new
-                    FileOutputStream(currentEventFile)))
+                Iterator<Event> iter = eventSet.iterator();
+                while (iter.hasNext())
                 {
-                    Event currentEvent;
-                    String currentTitle = "";
-
-                    Iterator<Event> iter = eventSet.iterator();
-                    while (iter.hasNext())
-                    {
-                        currentEvent = iter.next();
-                        currentTitle = currentEvent.getEventTitle();
+                    currentEvent = iter.next();
+                    currentTitle = currentEvent.getEventTitle();
                         
-                        //Testing
-                        System.out.println(currentEvent);
-
-                        if (currentTitle.equals(chosenEvent))
+                    if (currentTitle.equals(chosenEvent))
+                    {
+                        try (ObjectOutputStream outFile
+                            = new ObjectOutputStream(new
+                            FileOutputStream(currentEventFile)))
                         {
+                            //Testing
+                            System.out.println("Found a match. "
+                                + "Reserving seats...");
+                            Thread.sleep(2000);
+                            //eventSet.remove(currentEvent);
                             currentEvent.buyTickets(
                                 chosenTickets, chosenSection);
-                            System.out.println("\n\nAfter buying tickets\n");
+                            //eventSet.add(currentEvent);     
+                            outFile.writeObject(eventSet);
+                            //Testing
+                            System.out.println("\n\nAfter buying tickets INSIDE"
+                                + " of loop\n");
+                            Thread.sleep(2000);
+                            iter = eventSet.iterator();
+                            while (iter.hasNext())
+                            {
+                                currentEvent = iter.next();
+                                System.out.println(currentEvent);
+                                System.out.println("----\n"
+                                    + currentEvent.getSeatChart());
+                            }
                         }
-                        
+                        catch (Exception e)
+                        {
+                            System.err.print("Error inside inner loop " + e);
+                        }
+
+
+                        //Testing
+                        System.out.println("\n\nAfter buying tickets OUTSIDE"
+                            + " of loop\n");
+                        Thread.sleep(2000);
+                        iter = eventSet.iterator();
+                        while (iter.hasNext())
+                        {
+                            currentEvent = iter.next();
+                            System.out.println(currentEvent);
+                            System.out.println("----\n"
+                                + currentEvent.getSeatChart());
+                        }
                     }
-                    //Testing
-                    System.out.println("\n\nSet after buying tickets\n");
-                    iter = eventSet.iterator();
-                    while (iter.hasNext())
-                        System.out.println(iter.next());
-                    outFile.writeObject(eventSet);
+                        
                 }
-                catch (Exception e)
-                {
-                    System.err.print("Barfed inside inner loop " + e);
-                }
+
+
+            }
+            catch (EOFException e)
+            {
+                System.out.println("\nReached the end of events stored"
+                   + " in " + currentEventFile);
             }
             catch (Exception e)
             {
-                System.err.print("Barfed inside outer loop " + e);
+                System.err.print("Error inside outer loop " + e);
             }
 
+            System.out.println("\nTickets purchased.");
             socket.close();
 
 
@@ -134,6 +169,13 @@ public class TicketTask implements TicketConstants, Runnable
     }
 
 
+    /*
+     * Searches each Venue's event set
+     * for the given event and determines if
+     * there is a match
+     * @param search
+     * @return result file name of where event is stored
+     */
     private String searchForEvent(String search)
     {
         String result = "";
@@ -161,7 +203,10 @@ public class TicketTask implements TicketConstants, Runnable
                     eventName = currentEvent.getEventTitle();
 
                     if (eventName.equals(search))
+                    {
+                        System.out.println(currentEvent.getSeatChart());
                         result = tempVenue.getFileName();
+                    }
 
                 }
             }
@@ -173,7 +218,8 @@ public class TicketTask implements TicketConstants, Runnable
         }
         catch (EOFException e)
         {
-            System.out.println("\nReached the end of events stored.");
+            System.out.println("\nReached the end of events stored"
+                + " using searchForEvent method.");
         }
         catch (Exception e)
         {

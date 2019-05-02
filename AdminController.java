@@ -11,6 +11,8 @@ public class AdminController
 
     public static void main(String[] args)
     {
+        instructions();
+
         final String venueFileName = "Venue.ser";
         TreeSet venueSet;
 
@@ -63,7 +65,7 @@ public class AdminController
         String venueName = scan.nextLine();
 
         try (ObjectInputStream tempInFile
-            = new ObjectInputStream(new FileInputStream("Venue.ser")))
+            = new ObjectInputStream(new FileInputStream(venueFileName)))
         {
             String eventFileName = venueName + "Events.ser";
             File eventFile = new File(eventFileName);
@@ -90,13 +92,19 @@ public class AdminController
                 {
                     TreeSet<Event> eventSet 
                         = (TreeSet<Event>) inFile.readObject();
+                    Event tempEvent;
 
                     System.out.println("Here are the events for" +
                         " the selected venue:\n");
 
                     Iterator<Event> iter = eventSet.iterator();
                     while (iter.hasNext())
-                        System.out.println(iter.next());
+                    {
+                        tempEvent = iter.next();
+                        System.out.println(tempEvent);
+                        System.out.println("----\n"
+                           +  tempEvent.getSeatChart());
+                    }
 
                     createEvents(eventSet, eventFileName);
                 }
@@ -115,6 +123,12 @@ public class AdminController
         }
     }
 
+    /*
+     * Prompts users to make events and creates the
+     * appropriate event file
+     * @param eventSet The current set of events
+     * @param eventFileName The current event file name
+     */
     private static void createEvents(TreeSet<Event> eventSet, String eventFileName)
     {
         try (ObjectOutputStream outFile
@@ -168,6 +182,13 @@ public class AdminController
         }
     }
 
+    /*
+     * Prompts users to make Venues and creates the
+     * appropriate venue file
+     * @param venueName The name of the chosen venue
+     * @param venueSet The current set of veues
+     * @param venueFileName The current venue file name
+     */
     private static void createVenues(String venueName, TreeSet<Venue> venueSet,
                                         String venueFileName)
     {
@@ -194,6 +215,13 @@ public class AdminController
         {
             System.err.println("Error in writing to file " + venueFileName);
         }
+    }
+
+    private static void instructions()
+    {
+        System.out.println("\nThis program serves as the controller to "
+            + "create new venues and events,");
+        System.out.println("or modify existing venues.\n");
     }
 
 }

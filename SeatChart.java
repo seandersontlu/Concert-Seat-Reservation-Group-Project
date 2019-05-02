@@ -126,9 +126,9 @@ public class SeatChart implements TicketConstants, Serializable
     }
     
      /** Gets the seats in a given section
-     * @param section   the section number
-     * @throw IllegalArgumentException  the specified section doesn't exist
-     * @return  the seats in the specified section
+     * @param section   The inputted section number
+     * @throws IllegalArgumentException  Thrown if the specified section doesn't exist
+     * @return  sectSeats Returns the seats in the specified section
      */
     public LinkedList[] getSectionSeats (int section)
     {

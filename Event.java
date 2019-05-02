@@ -78,7 +78,6 @@ public class Event implements Comparable<Event>, Serializable
         return (section * 0.10);
     }
     
-
      /** Gets the seating chart
      * @return  the seating chart
      */
@@ -128,9 +127,10 @@ public class Event implements Comparable<Event>, Serializable
     }
 
      /** Buys the tickets
-     * @param numTickets 
-     * @param section   section number
-     * @return  totalPrice of a ticket
+     * @param numTickets Inputted number of tickets to be purchaced
+     * @param section   Inputted section number
+     * @throws IllegalArgumentException Thrown if the inputed number of tickets
+     * exceeds the number of tickets available
      */
     public void buyTickets(int numTickets, int section)
     {

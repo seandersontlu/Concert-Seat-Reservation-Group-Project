@@ -157,7 +157,7 @@ TicketConstants.java
     public final int COLS_PER_SECTION = 5;
             -- Constant number of columns
 
-TicketGUI.java
+TicketGUI.java (DO NOT USE)
     This program is an old version of the rough GUI created with NetBeans, 
     consider scrapping.
 

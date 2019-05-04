@@ -3,8 +3,12 @@
 // Submitted: 5/4/2019
 // READ_ME.txt
 
+
+
 Event Ticket and Seating Application
 -------------------------------------
+
+
 
 ***WHAT IS THIS?***
 
@@ -12,6 +16,8 @@ This set of classes form the basic structure of the Event Ticket and Seating
 Application, creating the necessary objects and methods for basic
 functionality. It allows the user to create events and venues, and allows a
 client to make reservations to  those events. This is a proof of concept.
+
+
 
 ***INSTRUCTIONS TO RUN***
 
@@ -23,12 +29,15 @@ step #1 --  Run AdminController.java and follow the steps given by the program t
 step #2 --  Run TicketServer.java to run the server.
 step #3 --  Run TicketGUI2.java to run the client and make your reservations. 
 
-***WARNINGS***
+
+
+***DIRE WARNINGS***
 
 DO NOT run TicketGUI.java, use TicketGUI2.java instead.
-DO NOT run TicketClient.java, it is a non-working text version of client
-server.
+DO NOT run TicketClient.java, it is a non-working text version of client.
 DO NOT delete TicketConstants.java
+
+
 
 ***Class and Program descriptions***
 

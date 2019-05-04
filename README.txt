@@ -138,7 +138,7 @@ SeatChart.java
     public String toSting()
             -- Converts the venue seats into a string for printing.
 
-TicketClient.java   (DO NOT USE)
+TicketClient.java       (DO NOT USE)
     This program is a text based client that allows the user to reserve seats
     at a given event to reserve seats and purchase tickets. Note this code does
     not currrently work due to code the no longer exist (consider scrapping).
@@ -157,13 +157,12 @@ TicketConstants.java
     public final int COLS_PER_SECTION = 5;
             -- Constant number of columns
 
-TicketGUI.java (DO NOT USE)
+TicketGUI.java          (DO NOT USE)
     This program is an old version of the rough GUI created with NetBeans, 
     consider scrapping.
 
-TicketGui2.java
-    Tis program is a better version of the GUI, cleaned up and altered. 
-    USE THIS VERSION OF THE GUI.
+TicketGui2.java         (USE THIS VERSION OF THE GUI)
+    Tis program is a better version of the GUI, cleaned up and altered.
 
 TicketServer.java
     This program in the server for both the GUI and text based client. It

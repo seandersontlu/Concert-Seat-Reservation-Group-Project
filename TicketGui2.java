@@ -9,6 +9,12 @@ public class TicketGui2 extends JFrame implements TicketConstants
     // Initialize values
     SeatChart seating;
 
+    JLabel eventLabel; 
+    JLabel venueLabel; 
+    JLabel sectionLabel; 
+    JLabel numTicketsLabel; 
+    JLabel resultLabel;
+
     public static void main (String[] args)
     {
         TicketGui2 window = new TicketGui2();
@@ -19,23 +25,40 @@ public class TicketGui2 extends JFrame implements TicketConstants
     public TicketGui2()
     {
         super ("Shop Concert Tickets");
-        setSize(600, 500);
+        setSize(450, 450);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
        
         seating = new SeatChart();
-
+        
+        // Labels
         JLabel titleLabel = new JLabel("Welecome to the ticket reservation system");
         JLabel instruction1 = new JLabel("Please select the event and the venue");
         JLabel instruction2 = new JLabel("Please select a section and enter " +
             "the number of tickets");
-        JLabel resultLabel = new JLabel();
-        JButton submitButton = new JButton("Submit");
+        resultLabel = new JLabel();
         
+        // Buttons
+        JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(new SubmitListener());
+        
+        // Panels
         JPanel step1Panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel step2Panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel buttonPanel = new JPanel();
+        JPanel venuePanel = new JPanel(new
+            GridLayout(seating.getRowsPerSect(),seating.getColsPerSect()));
         
+        JPanel[] sectionPanel = new JPanel[seating.getNumSections()];
+        for (int i = 0; i < sectionPanel.length; i++)
+        {
+            sectionPanel[i] = sectionSeatView();
+            sectionPanel[i].setBorder(BorderFactory.createLineBorder(Color.BLACK,7));
+        }
+
+        JPanel topPanel = new JPanel(new GridLayout(6, 1));
+        
+        // ComboBoxes
         JComboBox venueComboBox = new JComboBox();
         venueComboBox.addItem("Select Venue");
         for (int i = 0; i < 4; i++)
@@ -51,12 +74,10 @@ public class TicketGui2 extends JFrame implements TicketConstants
         for (int i = 0; i < 4; i++)
             sectionComboBox.addItem("Item " + (i+1));
         
+        // TextField
         JTextField numSeatsTextField = new JTextField("Enter number of seats");
         
-        JPanel[] venuePanel = new JPanel[seating.getNumSections()];
-        for (int i = 0; i < venuePanel.length; i++)
-            venuePanel[i] = new VenueView();
-        
+        // add to panels
         setLayout(new FlowLayout(FlowLayout.LEFT));
         buttonPanel.add(submitButton);
         step1Panel.add(venueComboBox);
@@ -64,22 +85,20 @@ public class TicketGui2 extends JFrame implements TicketConstants
         step2Panel.add(sectionComboBox);
         step2Panel.add(numSeatsTextField);
 
-        JPanel topPanel = new JPanel(new GridLayout(6, 1));
+        setLayout(new FlowLayout(FlowLayout.LEFT));
         topPanel.add(titleLabel);
         topPanel.add(instruction1);
         topPanel.add(step1Panel);
         topPanel.add(instruction2);
         topPanel.add(step2Panel);
         topPanel.add(buttonPanel);
-        
+        topPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        JPanel venueGrid = new JPanel(new GridLayout(seating.getRowsPerSect(),
-            seating.getColsPerSect()));
-        for (int i = 0; i < venuePanel.length; i++)
-            venueGrid.add(venuePanel[i]);
-
+        // add to frame
         add(topPanel, BorderLayout.NORTH);
-        add(venueGrid, BorderLayout.SOUTH);
+        for (int i = 0; i < sectionPanel.length; i++)
+            venuePanel.add(sectionPanel[i]);
+        add(venuePanel, BorderLayout.SOUTH); 
     }
     
     /* VenueComboBox listener 
@@ -112,16 +131,27 @@ public class TicketGui2 extends JFrame implements TicketConstants
     }
     */
 
-    /*
-        resultLabel.setText("No data to process");
-
-        SubmitButton.setText("Submit");
-        SubmitButton.addActionListener(new java.awt.event.ActionListener() 
+    private class SubmitListener implements ActionListener
+    {
+        public void actionPerformed(ActionEvent evt) 
         {
-            public void actionPerformed(java.awt.event.ActionEvent evt) 
-            {
-                SubmitButtonActionPerformed(evt);
-            }
+            //SubmitButtonActionPerformed(evt);
+            //resultLabel.setText("No data to process");
         }
-    */
+    }
+
+    private JPanel sectionSeatView()
+    {
+        JPanel venueGrid = new JPanel(new GridLayout(seating.getRowsPerSect(),
+            seating.getColsPerSect()));
+        
+        JButton[] buttonArr = new JButton[seating.getSeatsPerSection()];
+        for (int i = 0; i < buttonArr.length; i++)
+        {
+            buttonArr[i] = new JButton();
+            buttonArr[i].setBackground(Color.WHITE);
+            venueGrid.add(buttonArr[i]);
+        }
+        return venueGrid;
+    }
 }

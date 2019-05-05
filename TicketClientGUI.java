@@ -1,4 +1,9 @@
-// ticketGui.java
+// Montrell Wiley, David Glenewinkel, Sarah Anderson
+// CSCI 434, Project #2
+// TicketClientGUI.java
+
+/** GUI based client-server for ticketing system.
+ */
 
 import java.awt.*;
 import java.awt.event.*;
@@ -9,7 +14,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class TicketGui2 extends JFrame implements TicketConstants
+public class TicketClientGUI extends JFrame implements TicketConstants
 {
     // Initialize values
     private final int TEXT_BOX_WIDTH = 100;
@@ -34,12 +39,12 @@ public class TicketGui2 extends JFrame implements TicketConstants
 
     public static void main (String[] args)
     {
-        TicketGui2 window = new TicketGui2();
+        TicketClientGUI window = new TicketClientGUI();
         window.setVisible(true);
     }
     
     @SuppressWarnings("unChecked")
-    public TicketGui2()
+    public TicketClientGUI()
     {
         super ("Shop Concert Tickets");
         setSize(450, 450);

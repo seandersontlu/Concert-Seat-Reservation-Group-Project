@@ -3,6 +3,9 @@
 // 4/26/19
 // TicketClient.java
 
+/** Text based client-server for ticketing system.
+ */
+
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
@@ -54,6 +57,7 @@ public class TicketClient implements TicketConstants
             outToServer.flush();
 
             clientToServer.close();
+            System.out.println("Tickets purchased!");
         }
         catch (IOException e)
         {

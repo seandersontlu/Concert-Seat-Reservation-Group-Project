@@ -76,6 +76,7 @@ public class TicketClientGUI extends JFrame implements TicketConstants
         JPanel buttonPanel = new JPanel();
         JPanel venuePanel = new JPanel(new GridLayout(3,3));
         
+        seating = new SeatChart();
         sectionPanel = new JPanel[seating.getNumSections()];
         for (int i = 0; i < sectionPanel.length; i++)
         {

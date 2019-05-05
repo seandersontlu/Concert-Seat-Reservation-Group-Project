@@ -1,21 +1,53 @@
-// David, Sarah Anderson, and Montrell 
+// David Glenewinkel, Sarah Anderson, and Montrell Wiley 
 // CSCI 434  Project #2 Iteration #4
-// Submitted: 4/28/2019
+// Submitted: 5/4/2019
 // READ_ME.txt
+
+
 
 Event Ticket and Seating Application
 -------------------------------------
 
+
+
+***WHAT IS THIS?***
+
 This set of classes form the basic structure of the Event Ticket and Seating
-Application, creating the necessary opbjects and methods for basic
-functionality.
+Application, creating the necessary objects and methods for basic
+functionality. It allows the user to create events and venues, and allows a
+client to make reservations to  those events. This is a proof of concept.
+
+
+
+***INSTRUCTIONS TO RUN***
+
+To run the GUI based version of this application.
+
+step #1 --  Run AdminController.java and follow the steps given by the program to
+            create a venue and events. Repeat this step until all the venues and events you
+            want are created.
+step #2 --  Run TicketServer.java to run the server.
+step #3 --  Run TicketGUI2.java to run the client and make your reservations. 
+
+
+
+***DIRE WARNINGS***
+
+DO NOT run TicketGUI.java, use TicketGUI2.java instead.
+DO NOT run TicketClient.java, it is a non-working text version of client.
+DO NOT delete TicketConstants.java
+
+
+
+***Class and Program descriptions***
+
+docs directory
+    This directory contains javadoc documentation for this application.
 
 AdminController.java
     This program allows the user to create events and venues, putting them into
     a serializable file for use by other programs. Note that serializable files
     must be made before programs like the server, client, and GUI can work.
-
-
 
 Event.java
     This class creates an Event object and the associated methods.
@@ -115,7 +147,7 @@ SeatChart.java
     public String toSting()
             -- Converts the venue seats into a string for printing.
 
-TicketClient.java
+TicketClient.java       (DO NOT USE)
     This program is a text based client that allows the user to reserve seats
     at a given event to reserve seats and purchase tickets. Note this code does
     not currrently work due to code the no longer exist (consider scrapping).
@@ -134,13 +166,12 @@ TicketConstants.java
     public final int COLS_PER_SECTION = 5;
             -- Constant number of columns
 
-TicketGUI.java
+TicketGUI.java          (DO NOT USE)
     This program is an old version of the rough GUI created with NetBeans, 
     consider scrapping.
 
-TicketGui2.java
-    Tis program is a better version of the GUI, cleaned up and altered. 
-    USE THIS VERSION OF THE GUI.
+TicketGui2.java         (USE THIS VERSION OF THE GUI)
+    Tis program is a better version of the GUI, cleaned up and altered.
 
 TicketServer.java
     This program in the server for both the GUI and text based client. It
@@ -178,5 +209,12 @@ Venue class
             -- compares two venue objects
     public String toString()
             -- Returns the venue as a string.
+
+VenueTest.java
+    This program tests the venue class, the objects it creates and their
+    associated methods.
+
+VenueView.java
+    This program creates a view of the venue seating.
 
 

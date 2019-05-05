@@ -25,13 +25,9 @@ public class TicketClientGUI extends JFrame implements TicketConstants
     private Scanner inFromServer;
     private Socket clientToServer;
 
-    JPanel[] sectionPanel;
-    JLabel eventLabel; 
-    JLabel venueLabel; 
-    JLabel sectionLabel; 
-    JLabel numTicketsLabel; 
-    JLabel resultLabel;
-    JFormattedTextField numSeatsTextField;
+    private JPanel[] sectionPanel;
+    private JLabel resultLabel;
+    private JFormattedTextField numSeatsTextField;
 
     private String chosenEvent = "";
     private int chosenSection;
@@ -51,8 +47,6 @@ public class TicketClientGUI extends JFrame implements TicketConstants
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
        
-        seating = new SeatChart();
-
         // Setup connection to server
         try
         {
@@ -65,7 +59,6 @@ public class TicketClientGUI extends JFrame implements TicketConstants
             System.err.println(e);
         }
 
-        
         // Labels
         JLabel titleLabel = new JLabel("Welcome to the ticket reservation system");
         JLabel instruction1 = new JLabel("Please select an event");
@@ -173,17 +166,8 @@ public class TicketClientGUI extends JFrame implements TicketConstants
         }
     }
 
-    /** NumberOfSeats Listener
-    private class NumSeatsTextFieldListener implements ActionListener
-    {
-        public void actionPerformed(ActionEvent event) 
-        {
-            String result = numSeatsTextField.getText();
-            chosenTickets = Integer.parseInt(result);
-        }
-    }
-    */
-
+    /** SubmitButton listener
+     */
     private class SubmitListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event) 
@@ -200,6 +184,10 @@ public class TicketClientGUI extends JFrame implements TicketConstants
         }
     }
 
+    /*
+     * Creates a grid for one section
+     * @return  grid panel for one section
+     */
     private JPanel sectionSeatView()
     {
         JPanel venueGrid = new JPanel(new GridLayout(seating.getRowsPerSect(),

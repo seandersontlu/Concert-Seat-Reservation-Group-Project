@@ -3,17 +3,34 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.text.NumberFormatter;
+import java.text.NumberFormat;
+import java.io.*;
+import java.net.Socket;
+import java.util.Scanner;
 
 public class TicketGui2 extends JFrame implements TicketConstants
 {
     // Initialize values
-    SeatChart seating;
+    private final int TEXT_BOX_WIDTH = 100;
+    private final int TEXT_BOX_HEIGHT = 20;
 
+    private SeatChart seating;
+    private PrintWriter outToServer;
+    private Scanner inFromServer;
+    private Socket clientToServer;
+
+    JPanel[] sectionPanel;
     JLabel eventLabel; 
     JLabel venueLabel; 
     JLabel sectionLabel; 
     JLabel numTicketsLabel; 
     JLabel resultLabel;
+    JFormattedTextField numSeatsTextField;
+
+    private String chosenEvent = "";
+    private int chosenSection;
+    private int chosenTickets;
 
     public static void main (String[] args)
     {
@@ -30,10 +47,23 @@ public class TicketGui2 extends JFrame implements TicketConstants
         setLocationRelativeTo(null);
        
         seating = new SeatChart();
+
+        // Setup connection to server
+        try
+        {
+            clientToServer = new Socket("tluprog", PORT);
+            outToServer = new PrintWriter(clientToServer.getOutputStream());
+            inFromServer = new Scanner(clientToServer.getInputStream());
+        }
+        catch (IOException e)
+        {
+            System.err.println(e);
+        }
+
         
         // Labels
-        JLabel titleLabel = new JLabel("Welecome to the ticket reservation system");
-        JLabel instruction1 = new JLabel("Please select the event and the venue");
+        JLabel titleLabel = new JLabel("Welcome to the ticket reservation system");
+        JLabel instruction1 = new JLabel("Please select an event");
         JLabel instruction2 = new JLabel("Please select a section and enter " +
             "the number of tickets");
         resultLabel = new JLabel();
@@ -49,38 +79,48 @@ public class TicketGui2 extends JFrame implements TicketConstants
         JPanel venuePanel = new JPanel(new
             GridLayout(seating.getRowsPerSect(),seating.getColsPerSect()));
         
-        JPanel[] sectionPanel = new JPanel[seating.getNumSections()];
+        sectionPanel = new JPanel[seating.getNumSections()];
         for (int i = 0; i < sectionPanel.length; i++)
         {
             sectionPanel[i] = sectionSeatView();
-            sectionPanel[i].setBorder(BorderFactory.createLineBorder(Color.BLACK,7));
+            sectionPanel[i].setBorder(
+                BorderFactory.createTitledBorder(BorderFactory.createLineBorder(
+                    Color.BLACK, 2), "Section: " + (i+1)));
         }
 
         JPanel topPanel = new JPanel(new GridLayout(6, 1));
         
         // ComboBoxes
-        JComboBox venueComboBox = new JComboBox();
-        venueComboBox.addItem("Select Venue");
-        for (int i = 0; i < 4; i++)
-            venueComboBox.addItem("Item " + (i+1));
-
         JComboBox eventComboBox = new JComboBox();
         eventComboBox.addItem("Select Event");
-        for (int i = 0; i < 4; i++)
-            eventComboBox.addItem("Item " + (i+1));
-        
+        String line = "";
+        do
+        {
+            line = inFromServer.nextLine();
+            eventComboBox.addItem(line);
+        } while (!line.equals(END_OF_FILE));
+        eventComboBox.addActionListener(new EventComboBoxListener());
+
         JComboBox sectionComboBox = new JComboBox();
         sectionComboBox.addItem("Select Section");
-        for (int i = 0; i < 4; i++)
-            sectionComboBox.addItem("Item " + (i+1));
+        for (int i = 0; i < seating.getNumSections(); i++)
+            sectionComboBox.addItem(i+1);
+        sectionComboBox.addActionListener(new SectionComboBoxListener());
         
         // TextField
-        JTextField numSeatsTextField = new JTextField("Enter number of seats");
+        NumberFormat integerFormat = NumberFormat.getIntegerInstance();
+        NumberFormatter numberFormatter = new NumberFormatter(integerFormat);
+        numberFormatter.setAllowsInvalid(false);
+        numberFormatter.setMinimum(1);
+        numberFormatter.setMaximum(seating.getSeatsPerSection());
+
+        numSeatsTextField = new JFormattedTextField(numberFormatter);
+        numSeatsTextField.setPreferredSize(new Dimension(
+                                    TEXT_BOX_WIDTH,TEXT_BOX_HEIGHT));
         
         // add to panels
         setLayout(new FlowLayout(FlowLayout.LEFT));
         buttonPanel.add(submitButton);
-        step1Panel.add(venueComboBox);
         step1Panel.add(eventComboBox);
         step2Panel.add(sectionComboBox);
         step2Panel.add(numSeatsTextField);
@@ -98,45 +138,60 @@ public class TicketGui2 extends JFrame implements TicketConstants
         add(topPanel, BorderLayout.NORTH);
         for (int i = 0; i < sectionPanel.length; i++)
             venuePanel.add(sectionPanel[i]);
-        add(venuePanel, BorderLayout.SOUTH); 
+        add(venuePanel, BorderLayout.SOUTH);
+        add(resultLabel);
     }
     
-    /* VenueComboBox listener 
-    private class VenueComboBoxListener implements ActionListener
+    /** EventComboBox listener 
+     */
+    private class EventComboBoxListener implements ActionListener
     {
-        public void actionPerformed(ActionEvent evt) 
+        public void actionPerformed(ActionEvent event) 
         {
-            VenueComboBoxActionPerformed(evt);
+            JComboBox cb = (JComboBox) event.getSource();
+            chosenEvent = (String) cb.getSelectedItem();
         }
     }
-    */
 
-    /* EventComboBox listener
+    /** SectionComboBox listener
+     */
     private class SectionComboBoxListener implements ActionListener
     {
-        public void actionPerformed(ActionEvent evt) 
+        public void actionPerformed(ActionEvent event) 
         {
-            SectionsComboBoxActionPerformed(evt);
+            JComboBox cb = (JComboBox) event.getSource();
+            chosenSection = (int) cb.getSelectedItem();
+
+            sectionPanel[chosenSection - 1].setBorder(
+                BorderFactory.createTitledBorder(BorderFactory.createLineBorder(
+                    Color.RED, 2), "Section: " + chosenSection));
         }
     }
-    */
 
-    /* NumberOfSeats Listener
+    /** NumberOfSeats Listener
     private class NumSeatsTextFieldListener implements ActionListener
     {
-        public void actionPerformed(ActionEvent evt) 
+        public void actionPerformed(ActionEvent event) 
         {
-            NumSeatsTextFieldActionPerformed(evt);
+            String result = numSeatsTextField.getText();
+            chosenTickets = Integer.parseInt(result);
         }
     }
     */
 
     private class SubmitListener implements ActionListener
     {
-        public void actionPerformed(ActionEvent evt) 
+        public void actionPerformed(ActionEvent event) 
         {
-            //SubmitButtonActionPerformed(evt);
-            //resultLabel.setText("No data to process");
+            String result = numSeatsTextField.getText();
+            chosenTickets = Integer.parseInt(result);
+            resultLabel.setText("Chose " + chosenTickets + " tickets");
+            outToServer.println(chosenEvent);
+            outToServer.flush();
+            outToServer.println(chosenSection);
+            outToServer.flush();
+            outToServer.println(chosenTickets);
+            outToServer.flush();
         }
     }
 

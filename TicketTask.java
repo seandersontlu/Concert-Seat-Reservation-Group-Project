@@ -89,7 +89,7 @@ public class TicketTask implements TicketConstants, Runnable
                 while (iter.hasNext())
                 {
                     currentEvent = iter.next();
-                    currentTitle = currentEvent.getEventTitle();
+                    currentTitle = currentEvent.toString();
                         
                     if (currentTitle.equals(chosenEvent))
                     {
@@ -199,7 +199,7 @@ public class TicketTask implements TicketConstants, Runnable
                 while (eventIter.hasNext())
                 {
                     currentEvent = eventIter.next();
-                    eventName = currentEvent.getEventTitle();
+                    eventName = currentEvent.toString();
 
                     if (eventName.equals(search))
                     {

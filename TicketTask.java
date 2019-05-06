@@ -101,10 +101,10 @@ public class TicketTask implements TicketConstants, Runnable
                             System.out.println("Found a match. "
                                 + "Reserving seats...");
                             Thread.sleep(2000);
-                            //eventSet.remove(currentEvent);
+                            eventSet.remove(currentEvent);
                             currentEvent.buyTickets(
                                 chosenTickets, chosenSection);
-                            //eventSet.add(currentEvent);     
+                            eventSet.add(currentEvent);     
                             outFile.writeObject(eventSet);
                             //Testing
                             System.out.println("\n\nAfter buying tickets INSIDE"

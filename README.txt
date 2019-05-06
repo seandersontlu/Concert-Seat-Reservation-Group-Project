@@ -27,16 +27,7 @@ step #1 --  Run AdminController.java and follow the steps given by the program t
             create a venue and events. Repeat this step until all the venues and events you
             want are created.
 step #2 --  Run TicketServer.java to run the server.
-step #3 --  Run TicketGUI2.java to run the client and make your reservations. 
-
-
-
-***DIRE WARNINGS***
-
-DO NOT run TicketGUI.java, use TicketGUI2.java instead.
-DO NOT run TicketClient.java, it is a non-working text version of client.
-DO NOT delete TicketConstants.java
-
+step #3 --  Run TicketClientGUI.java to run the client and make your reservations
 
 
 ***Class and Program descriptions***
@@ -147,7 +138,7 @@ SeatChart.java
     public String toSting()
             -- Converts the venue seats into a string for printing.
 
-TicketClient.java       (DO NOT USE)
+TicketClient.java
     This program is a text based client that allows the user to reserve seats
     at a given event to reserve seats and purchase tickets. Note this code does
     not currrently work due to code the no longer exist (consider scrapping).
@@ -166,12 +157,8 @@ TicketConstants.java
     public final int COLS_PER_SECTION = 5;
             -- Constant number of columns
 
-TicketGUI.java          (DO NOT USE)
-    This program is an old version of the rough GUI created with NetBeans, 
-    consider scrapping.
-
-TicketGui2.java         (USE THIS VERSION OF THE GUI)
-    Tis program is a better version of the GUI, cleaned up and altered.
+TicketClientGUI.java       
+    This program is a working version of the GUI.
 
 TicketServer.java
     This program in the server for both the GUI and text based client. It
